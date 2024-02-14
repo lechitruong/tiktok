@@ -2,43 +2,31 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('Users', {
+        await queryInterface.createTable('Messages', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER,
             },
-            fullName: {
-                type: Sequelize.STRING,
-            },
-            userName: {
-                type: Sequelize.STRING,
-                unique: true,
-            },
-            email: {
-                type: Sequelize.STRING,
-            },
-            password: {
-                type: Sequelize.STRING,
-            },
-            association: {
-                type: Sequelize.STRING,
-                defaultValue: '',
-            },
-            avatar: {
-                type: Sequelize.STRING,
-            },
-            isVertified: {
-                type: Sequelize.BOOLEAN,
-                defaultValue: false,
-            },
-            roleCode: {
-                type: Sequelize.STRING,
-                defaultValue: 'R3',
+            sender: {
+                allowNull: false,
+                type: Sequelize.INTEGER,
                 references: {
-                    model: 'Roles',
-                    key: 'code',
+                    model: 'Users',
+                    key: 'id',
+                },
+            },
+            content: {
+                allowNull: false,
+                type: Sequelize.STRING,
+            },
+            chatroomId: {
+                allowNull: false,
+                type: Sequelize.INTEGER,
+                references: {
+                    model: 'Chatrooms',
+                    key: 'id',
                 },
             },
             createdAt: {
@@ -54,6 +42,6 @@ module.exports = {
         });
     },
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('Users');
+        await queryInterface.dropTable('Messages');
     },
 };

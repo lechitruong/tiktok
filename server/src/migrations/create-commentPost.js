@@ -2,44 +2,43 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('Users', {
+        await queryInterface.createTable('CommentsPost', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER,
             },
-            fullName: {
-                type: Sequelize.STRING,
+            commenter: {
+                allowNull: false,
+                type: Sequelize.INTEGER,
+                references: {
+                    model: 'Users',
+                    key: 'id',
+                },
             },
-            userName: {
-                type: Sequelize.STRING,
-                unique: true,
+            postId: {
+                allowNull: false,
+                type: Sequelize.INTEGER,
+                references: {
+                    model: 'Posts',
+                    key: 'id',
+                },
             },
-            email: {
-                type: Sequelize.STRING,
-            },
-            password: {
-                type: Sequelize.STRING,
-            },
-            association: {
+            content: {
+                allowNull: false,
                 type: Sequelize.STRING,
                 defaultValue: '',
             },
-            avatar: {
-                type: Sequelize.STRING,
+            likes: {
+                allowNull: false,
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
             },
-            isVertified: {
-                type: Sequelize.BOOLEAN,
-                defaultValue: false,
-            },
-            roleCode: {
-                type: Sequelize.STRING,
-                defaultValue: 'R3',
-                references: {
-                    model: 'Roles',
-                    key: 'code',
-                },
+            replies: {
+                allowNull: false,
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
             },
             createdAt: {
                 allowNull: false,
@@ -54,6 +53,6 @@ module.exports = {
         });
     },
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('Users');
+        await queryInterface.dropTable('CommentsPost');
     },
 };

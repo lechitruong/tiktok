@@ -38,6 +38,7 @@ CREATE TABLE `notifications` (
 
 CREATE TABLE `chatrooms` (
   `id` INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
   `createdAt` TIMESTAMP NOT NULL DEFAULT 'current_timestamp',
   `updatedAt` TIMESTAMP NOT NULL DEFAULT 'current_timestamp'
 );
@@ -78,7 +79,7 @@ CREATE TABLE `followers` (
 CREATE TABLE `posts` (
   `id` INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `title` varchar(1000) NOT NULL,
-  `video` varchar(255) NOT NULL,
+  `videoUrl` varchar(255) NOT NULL,
   `likes` INT NOT NULL DEFAULT 0,
   `comments` INT NOT NULL DEFAULT 0,
   `views` INT NOT NULL DEFAULT 0,
@@ -109,7 +110,7 @@ CREATE TABLE `commentsPost` (
 CREATE TABLE `likesComment` (
   `id` INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `liker` INT(11) NOT NULL,
-  `commentId` INT(11) NOT NULL,
+  `commentPostId` INT(11) NOT NULL,
   `createdAt` TIMESTAMP NOT NULL DEFAULT 'current_timestamp',
   `updatedAt` TIMESTAMP NOT NULL DEFAULT 'current_timestamp'
 );
@@ -117,7 +118,7 @@ CREATE TABLE `likesComment` (
 CREATE TABLE `commentsReply` (
   `id` INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `responder` INT(11) NOT NULL,
-  `commentId` INT(11) NOT NULL,
+  `commentPostId` INT(11) NOT NULL,
   `likes` INT NOT NULL DEFAULT 0,
   `content` varchar(1000) NOT NULL,
   `createdAt` TIMESTAMP NOT NULL DEFAULT 'current_timestamp',
@@ -126,7 +127,7 @@ CREATE TABLE `commentsReply` (
 
 ALTER TABLE `users` ADD CONSTRAINT `users_fk0` FOREIGN KEY (`roleCode`) REFERENCES `roles` (`code`);
 
-ALTER TABLE `otps` ADD CONSTRAINT `otps_fk0` FOREIGN KEY (`email`) REFERENCES `users` (`email`);
+-- ALTER TABLE `otps` ADD CONSTRAINT `otps_fk0` FOREIGN KEY (`email`) REFERENCES `users` (`email`);
 
 ALTER TABLE `notifications` ADD CONSTRAINT `notifications_fk0` FOREIGN KEY (`userId`) REFERENCES `users` (`id`);
 
@@ -154,10 +155,10 @@ ALTER TABLE `commentsPost` ADD CONSTRAINT `commentsPost_fk0` FOREIGN KEY (`postI
 
 ALTER TABLE `commentsPost` ADD CONSTRAINT `commentsPost_fk1` FOREIGN KEY (`commenter`) REFERENCES `users` (`id`);
 
-ALTER TABLE `likesComment` ADD CONSTRAINT `likesComment_fk0` FOREIGN KEY (`commentId`) REFERENCES `commentsPost` (`id`);
+ALTER TABLE `likesComment` ADD CONSTRAINT `likesComment_fk0` FOREIGN KEY (`commentPostId`) REFERENCES `commentsPost` (`id`);
 
 ALTER TABLE `likesComment` ADD CONSTRAINT `likesComment_fk1` FOREIGN KEY (`liker`) REFERENCES `users` (`id`);
 
 ALTER TABLE `commentsReply` ADD CONSTRAINT `commentsReply_fk0` FOREIGN KEY (`responder`) REFERENCES `users` (`id`);
 
-ALTER TABLE `commentsReply` ADD CONSTRAINT `commentsReply_fk1` FOREIGN KEY (`commentId`) REFERENCES `commentsPost` (`id`);
+ALTER TABLE `commentsReply` ADD CONSTRAINT `commentsReply_fk1` FOREIGN KEY (`commentPostId`) REFERENCES `commentsPost` (`id`);

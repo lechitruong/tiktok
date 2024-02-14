@@ -2,44 +2,40 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('Users', {
+        await queryInterface.createTable('Posts', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER,
             },
-            fullName: {
+            likes: {
+                allowNull: false,
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+            },
+            views: {
+                allowNull: false,
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+            },
+            comments: {
+                allowNull: false,
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+            },
+            shares: {
+                allowNull: false,
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+            },
+            title: {
+                allowNull: false,
                 type: Sequelize.STRING,
             },
-            userName: {
+            videoUrl: {
+                allowNull: false,
                 type: Sequelize.STRING,
-                unique: true,
-            },
-            email: {
-                type: Sequelize.STRING,
-            },
-            password: {
-                type: Sequelize.STRING,
-            },
-            association: {
-                type: Sequelize.STRING,
-                defaultValue: '',
-            },
-            avatar: {
-                type: Sequelize.STRING,
-            },
-            isVertified: {
-                type: Sequelize.BOOLEAN,
-                defaultValue: false,
-            },
-            roleCode: {
-                type: Sequelize.STRING,
-                defaultValue: 'R3',
-                references: {
-                    model: 'Roles',
-                    key: 'code',
-                },
             },
             createdAt: {
                 allowNull: false,
@@ -54,6 +50,6 @@ module.exports = {
         });
     },
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('Users');
+        await queryInterface.dropTable('Posts');
     },
 };
