@@ -4,10 +4,10 @@ import bcrypt from 'bcrypt';
 const hashPassword = (password) =>
     bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 export const register = (email, fullName, userName, password, association) =>
-    new Promise((resolve, reject) => {
+    new Promise(async (resolve, reject) => {
         try {
             password = hashPassword(password);
-            const resp = db.User.findOrCreate({
+            const resp = await db.User.findOrCreate({
                 where: { [Op.or]: [{ email }, { userName }] },
                 defaults: {
                     email,

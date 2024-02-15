@@ -63,6 +63,7 @@ class AuthController {
                     digits: true,
                 });
                 const createOTP = await otpServices.createOTP(email, otp);
+                console.log(otp);
                 sendMail(
                     otpTemplateMail,
                     'OTP Mail',

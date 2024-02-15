@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             // define association here
             UserInChatroom.belongsTo(models.User, {
-                foreignKey: 'menber',
+                foreignKey: 'member',
                 targetKey: 'id',
             });
             UserInChatroom.belongsTo(models.Chatroom, {
@@ -23,11 +23,11 @@ module.exports = (sequelize, DataTypes) => {
         {
             member: DataTypes.INTEGER,
             chatroomId: DataTypes.INTEGER,
-            isSeen: DataTypes.BOOLEAN,
         },
         {
             sequelize,
             modelName: 'UserInChatroom',
+            tableName: 'usersinchatroom',
         }
     );
     return UserInChatroom;
