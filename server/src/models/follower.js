@@ -12,10 +12,12 @@ module.exports = (sequelize, DataTypes) => {
             Follower.belongsTo(models.User, {
                 foreignKey: 'follower',
                 targetKey: 'id',
+                as: 'followerInfo',
             });
             Follower.belongsTo(models.User, {
                 foreignKey: 'followee',
                 targetKey: 'id',
+                as: 'followeeInfo',
             });
         }
     }

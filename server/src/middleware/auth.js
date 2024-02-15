@@ -2,7 +2,13 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const fs = require('fs');
 const path = require('path');
-const { forBidden, unauthorized } = require('../utils/handleResp');
+const {
+    forBidden,
+    unauthorized,
+    internalServerError,
+} = require('../utils/handleResp');
+import { log } from 'console';
+import * as userInChatroomServices from '../services/userInChatroom';
 class Auth {
     origin(req, res, next) {
         const token = req.headers.token;
@@ -31,6 +37,22 @@ class Auth {
             )
                 next();
             else return forBidden('You are not allowed to access', res);
+        });
+    }
+    isInChatroom(req, res, next) {
+        new Auth().origin(req, res, async () => {
+            try {
+                const isInChatroom =
+                    await userInChatroomServices.isExistUserInChatroom(
+                        req.user.id,
+                        req.params.chatroomId
+                    );
+                if (isInChatroom) next();
+                else return forBidden('You are not allowed to access', res);
+            } catch (error) {
+                console.log(error);
+                return internalServerError(res);
+            }
         });
     }
     isAdmin(req, res, next) {

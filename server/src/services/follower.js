@@ -1,35 +1,67 @@
 import { Op } from 'sequelize';
 import db from '../models';
+import { pagingConfig } from '../utils/pagination';
 export const getListFollowing = (
     userId,
-    page = 1,
-    pageSize = 30,
-    orderBy = 'createdAt',
-    orderDirection = 'DESC'
+    { page, pageSize, orderBy, orderDirection, userName, fullName }
 ) =>
     new Promise(async (resolve, reject) => {
         try {
+            const queries = pagingConfig(
+                page,
+                pageSize,
+                orderBy,
+                orderDirection
+            );
+            const query = {};
+            if (userName) query.userName = { [Op.substring]: userName };
+            if (fullName) query.fullName = { [Op.substring]: fullName };
             const followings = await db.Follower.findAll({
                 where: {
                     followee: userId,
                 },
-                order: [[orderBy, orderDirection]],
-                limit: pageSize,
-                offset: (page - 1) * pageSize,
+                attributes: {
+                    exclude: ['followerId', 'followeeId'],
+                },
+                ...queries,
+                include: [
+                    {
+                        model: db.User,
+                        as: 'followerInfo',
+                        attributes: ['id', 'name', 'fullName', 'avatar'],
+                    },
+                    {
+                        model: db.User,
+                        as: 'followeeInfo',
+                        attributes: {
+                            exclude: [
+                                'password',
+                                'createdAt',
+                                'updatedAt',
+                                'roleCode',
+                                'association',
+                            ],
+                        },
+                        where: query,
+                    },
+                ],
             });
             const totalItems = await db.Follower.count({
                 where: {
                     followee: userId,
                 },
             });
-            const totalPages = Math.ceil(totalItems / pageSize);
+            const totalPages =
+                totalItems / pageSize >= 1
+                    ? Math.ceil(totalItems / pageSize)
+                    : 1;
             resolve({
                 followings,
                 pagination: {
-                    orderBy,
-                    page,
-                    pageSize,
-                    orderDirection,
+                    orderBy: queries.orderBy,
+                    page: queries.offset + 1,
+                    pageSize: queries.limit,
+                    orderDirection: queries.orderDirection,
                     totalItems,
                     totalPages,
                 },
@@ -40,34 +72,73 @@ export const getListFollowing = (
     });
 export const getListFollower = (
     userId,
-    page = 1,
-    pageSize = 30,
-    orderBy = 'createdAt',
-    orderDirection = 'DESC'
+    { page, pageSize, orderBy, orderDirection, userName, fullName }
 ) =>
     new Promise(async (resolve, reject) => {
         try {
+            const queries = pagingConfig(
+                page,
+                pageSize,
+                orderBy,
+                orderDirection
+            );
+            const query = {};
+            if (userName) query.userName = { [Op.substring]: userName };
+            if (fullName) query.fullName = { [Op.substring]: fullName };
             const followers = await db.Follower.findAll({
                 where: {
                     follower: userId,
                 },
-                order: [[orderBy, orderDirection]],
-                limit: pageSize,
-                offset: (page - 1) * pageSize,
+                attributes: {
+                    exclude: ['followerId', 'followeeId'],
+                },
+                ...queries,
+                include: [
+                    {
+                        model: db.User,
+                        as: 'followerInfo',
+                        attributes: {
+                            exclude: [
+                                'password',
+                                'createdAt',
+                                'updatedAt',
+                                'roleCode',
+                                'association',
+                            ],
+                        },
+                    },
+                    {
+                        model: db.User,
+                        as: 'followeeInfo',
+                        attributes: {
+                            exclude: [
+                                'password',
+                                'createdAt',
+                                'updatedAt',
+                                'roleCode',
+                                'association',
+                            ],
+                        },
+                        where: query,
+                    },
+                ],
             });
             const totalItems = await db.Follower.count({
                 where: {
                     follower: userId,
                 },
             });
-            const totalPages = Math.ceil(totalItems / pageSize);
+            const totalPages =
+                totalItems / pageSize >= 1
+                    ? Math.ceil(totalItems / pageSize)
+                    : 1;
             resolve({
                 followers,
                 pagination: {
-                    orderBy,
-                    page,
-                    pageSize,
-                    orderDirection,
+                    orderBy: queries.orderBy,
+                    page: queries.offset + 1,
+                    pageSize: queries.limit,
+                    orderDirection: queries.orderDirection,
                     totalItems,
                     totalPages,
                 },

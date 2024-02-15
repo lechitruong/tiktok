@@ -33,6 +33,11 @@ module.exports = {
                 allowNull: false,
                 type: Sequelize.STRING,
             },
+            thumnailUrl: {
+                allowNull: false,
+                type: Sequelize.STRING,
+                defaultValue: '',
+            },
             videoUrl: {
                 allowNull: false,
                 type: Sequelize.STRING,

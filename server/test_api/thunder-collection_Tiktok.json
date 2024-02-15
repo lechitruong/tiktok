@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "Tiktok",
-    "dateExported": "2024-02-15T14:32:57.573Z",
+    "dateExported": "2024-02-15T19:51:32.450Z",
     "version": "1.1",
     "folders": [],
     "requests": [
@@ -19,7 +19,7 @@
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"email\" : \"phuonganh@gmail.com\",\n  \"fullName\" : \"Hoàng Huy Dev\",\n  \"userName\" : \"phuonganhcute\",\n  \"password\" : \"user\",\n  \"association\" : \"\"\n}",
+                "raw": "{\n  \"email\" : \"phuonganh@gmail.com\",\n  \"fullName\" : \"Phương Anh\",\n  \"userName\" : \"phuonganhcute\",\n  \"password\" : \"user\",\n  \"association\" : \"\"\n}",
                 "form": []
             },
             "tests": []
@@ -82,6 +82,31 @@
             "tests": []
         },
         {
+            "_id": "81369156-de68-4f64-88ef-ae7a537588ba",
+            "colId": "6c347e79-3365-4425-8aea-89a46b26f00d",
+            "containerId": "",
+            "name": "Find Users",
+            "url": "http://localhost:8000/api/v1/user/find?userName=h",
+            "method": "GET",
+            "sortNum": 45000,
+            "created": "2024-02-15T19:19:25.544Z",
+            "modified": "2024-02-15T19:23:06.660Z",
+            "headers": [
+                {
+                    "name": "Token",
+                    "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiZW1haWwiOiJob2FuZ2h1eWRldkBnbWFpbC5jb20iLCJyb2xlVmFsdWUiOiJBZG1pbiIsImlhdCI6MTcwODAwMjk2MSwiZXhwIjoxNzA4NDM0OTYxfQ.hsoDmswSdvSoQRbJBYsJ9sv2j33WVFoCVr4ZSo3-SYvwW7Gao88KgTShrK0JwsDLmxRJVjtAa5ZfUcbwAhXu1hS9Z4W3jn0b3xO67ZhOsAjI8xc2KzGSjtwMhy1q0oaZYM9IlzErxJxpXYnq8XEMt5zcRuJB9tLiexPLvMJWLH9JRm9-R80rom2AJiM8QgCpkCFHxDfwsnJVXElgG_ot87mBjVZA7AQ9sVtSalnppefG7DklYOvO4qjG7UvZw8M5H2Uf8Vm_CbAa-C7Fd4NeNGk9nqWEp37ZAPi_GzL9xOADmDm2joboO2ZEA38kSmeqxEBTsdQH7rHhn3SDckVALg"
+                }
+            ],
+            "params": [
+                {
+                    "name": "userName",
+                    "value": "h",
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        },
+        {
             "_id": "c60cef70-804e-4cb3-be6d-9e551dd28234",
             "colId": "6c347e79-3365-4425-8aea-89a46b26f00d",
             "containerId": "",
@@ -124,11 +149,55 @@
             "colId": "6c347e79-3365-4425-8aea-89a46b26f00d",
             "containerId": "",
             "name": "Get List Follower",
-            "url": "http://localhost:8000/api/v1/follow/followers/9",
+            "url": "http://localhost:8000/api/v1/follow/followers/9?userName=phuong",
             "method": "GET",
             "sortNum": 70000,
             "created": "2024-02-15T14:20:50.118Z",
-            "modified": "2024-02-15T14:21:38.958Z",
+            "modified": "2024-02-15T19:04:17.647Z",
+            "headers": [
+                {
+                    "name": "Token",
+                    "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImVtYWlsIjoicGh1b25nYW5oQGdtYWlsLmNvbSIsInJvbGVWYWx1ZSI6IlVzZXIiLCJpYXQiOjE3MDgwMDMxODksImV4cCI6MTcwODQzNTE4OX0.k6je0bJeXyfSGl9JsBi2sJcydo96FaCSDj3Zd-yT3K1N3OmcONuQ1oNO1PjPQOB0Y8XLcaxgIoSAdNAIeztpzbccoRtOBy1EDubVOElfE_oXLbQjIIyHoM4pw_IwfzMNKfLYDiLu9tpDjxjG71p6_GeO1a21fFYPVDfz8-bJ_ZfCRKZcQJN0IzkgI_ka-tAHrsoHhHPlieYbuk_XWkG9mJpaBIPkeTRUBSD2hCfhRMtiH05YxSmgNuibhCxpOYC0IYKcrDdyLMBgB3sLzpRjfQuFrN0fgowftEvTuKWmGqOhEdktow0DrmTIRZFmmZxHI6iwuwxWU5S5zE7C9LfjcA"
+                }
+            ],
+            "params": [
+                {
+                    "name": "userName",
+                    "value": "phuong",
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "6177db81-d023-4d2c-b7b2-17b90a1d2a8e",
+            "colId": "6c347e79-3365-4425-8aea-89a46b26f00d",
+            "containerId": "",
+            "name": "Get Chatrooms By UserId",
+            "url": "http://localhost:8000/api/v1/chatroom/user/10",
+            "method": "GET",
+            "sortNum": 75000,
+            "created": "2024-02-15T19:28:30.590Z",
+            "modified": "2024-02-15T19:28:49.467Z",
+            "headers": [
+                {
+                    "name": "Token",
+                    "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImVtYWlsIjoicGh1b25nYW5oQGdtYWlsLmNvbSIsInJvbGVWYWx1ZSI6IlVzZXIiLCJpYXQiOjE3MDgwMDMxODksImV4cCI6MTcwODQzNTE4OX0.k6je0bJeXyfSGl9JsBi2sJcydo96FaCSDj3Zd-yT3K1N3OmcONuQ1oNO1PjPQOB0Y8XLcaxgIoSAdNAIeztpzbccoRtOBy1EDubVOElfE_oXLbQjIIyHoM4pw_IwfzMNKfLYDiLu9tpDjxjG71p6_GeO1a21fFYPVDfz8-bJ_ZfCRKZcQJN0IzkgI_ka-tAHrsoHhHPlieYbuk_XWkG9mJpaBIPkeTRUBSD2hCfhRMtiH05YxSmgNuibhCxpOYC0IYKcrDdyLMBgB3sLzpRjfQuFrN0fgowftEvTuKWmGqOhEdktow0DrmTIRZFmmZxHI6iwuwxWU5S5zE7C9LfjcA"
+                }
+            ],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "bce9dccb-753e-4e54-88ab-01201df9ad28",
+            "colId": "6c347e79-3365-4425-8aea-89a46b26f00d",
+            "containerId": "",
+            "name": "Get Users In Chatroom",
+            "url": "http://localhost:8000/api/v1/chatroom/9/users",
+            "method": "GET",
+            "sortNum": 77500,
+            "created": "2024-02-15T19:48:26.731Z",
+            "modified": "2024-02-15T19:48:39.619Z",
             "headers": [
                 {
                     "name": "Token",
@@ -143,18 +212,24 @@
             "colId": "6c347e79-3365-4425-8aea-89a46b26f00d",
             "containerId": "",
             "name": "Get List Following",
-            "url": "http://localhost:8000/api/v1/follow/followings/9",
+            "url": "http://localhost:8000/api/v1/follow/followings/9?userName=hoanghuydev",
             "method": "GET",
             "sortNum": 80000,
             "created": "2024-02-15T14:29:49.007Z",
-            "modified": "2024-02-15T14:30:06.038Z",
+            "modified": "2024-02-15T18:58:50.308Z",
             "headers": [
                 {
                     "name": "Token",
                     "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImVtYWlsIjoicGh1b25nYW5oQGdtYWlsLmNvbSIsInJvbGVWYWx1ZSI6IlVzZXIiLCJpYXQiOjE3MDgwMDMxODksImV4cCI6MTcwODQzNTE4OX0.k6je0bJeXyfSGl9JsBi2sJcydo96FaCSDj3Zd-yT3K1N3OmcONuQ1oNO1PjPQOB0Y8XLcaxgIoSAdNAIeztpzbccoRtOBy1EDubVOElfE_oXLbQjIIyHoM4pw_IwfzMNKfLYDiLu9tpDjxjG71p6_GeO1a21fFYPVDfz8-bJ_ZfCRKZcQJN0IzkgI_ka-tAHrsoHhHPlieYbuk_XWkG9mJpaBIPkeTRUBSD2hCfhRMtiH05YxSmgNuibhCxpOYC0IYKcrDdyLMBgB3sLzpRjfQuFrN0fgowftEvTuKWmGqOhEdktow0DrmTIRZFmmZxHI6iwuwxWU5S5zE7C9LfjcA"
                 }
             ],
-            "params": [],
+            "params": [
+                {
+                    "name": "userName",
+                    "value": "hoanghuydev",
+                    "isPath": false
+                }
+            ],
             "tests": []
         }
     ]

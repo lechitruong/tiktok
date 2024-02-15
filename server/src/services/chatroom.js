@@ -1,35 +1,111 @@
 import { Op } from 'sequelize';
 import db from '../models';
-export const getChatroomsOfUser = (
-    id,
-    page = 1,
-    pageSize = 10,
-    orderBy = 'createdAt',
-    orderDirection = 'DESC'
+import { pagingConfig } from '../utils/pagination';
+import { query } from 'express';
+export const getUsersInChatroom = (
+    chatroomId,
+    { page, pageSize, orderBy, orderDirection, userName, fullName }
 ) =>
     new Promise(async (resolve, reject) => {
         try {
-            const chatrooms = await db.Chatroom.findAll({
+            const queries = pagingConfig(
+                page,
+                pageSize,
+                orderBy,
+                orderDirection
+            );
+            const query = {};
+            if (userName) query.userName = { [Op.substring]: userName };
+            if (fullName) query.fullName = { [Op.substring]: fullName };
+            const usersNotRaw = await db.UserInChatroom.findAll({
+                attributes: [],
                 where: {
-                    id,
+                    chatroomId,
                 },
-                order: [[orderBy, orderDirection]],
-                limit: pageSize,
-                offset: (page - 1) * pageSize,
+                include: [
+                    {
+                        model: db.User,
+                        attributes: ['id', 'userName', 'fullName', 'avatar'],
+                        where: query,
+                    },
+                ],
+                ...queries,
             });
-            const totalItems = await db.Chatroom.count({
+            const users = usersNotRaw.map(
+                (userInChatroom) => userInChatroom['User']
+            );
+            const totalItems = await await db.UserInChatroom.count({
                 where: {
-                    followee: userId,
+                    chatroomId,
                 },
             });
-            const totalPages = Math.ceil(totalItems / pageSize);
+            const totalPages =
+                totalItems / pageSize >= 1
+                    ? Math.ceil(totalItems / pageSize)
+                    : 1;
+            resolve({
+                users,
+                pagination: {
+                    orderBy: queries.orderBy,
+                    page: queries.offset + 1,
+                    pageSize: queries.limit,
+                    orderDirection: queries.orderDirection,
+                    totalItems,
+                    totalPages,
+                },
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+export const getChatroomsOfUser = (
+    member,
+    { page, pageSize, orderBy, orderDirection, name }
+) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const queries = pagingConfig(
+                page,
+                pageSize,
+                orderBy,
+                orderDirection
+            );
+            const query = {};
+            if (name) query.name = { [Op.substring]: name };
+            const chatroomsNotRaw = await db.UserInChatroom.findAll({
+                attributes: [],
+                where: {
+                    member,
+                },
+                include: [
+                    {
+                        model: db.Chatroom,
+                        attributes: ['id', 'name'],
+                    },
+                ],
+
+                ...queries,
+            });
+            const chatrooms = chatroomsNotRaw.map(
+                (userInChatroom) => userInChatroom['Chatroom']
+            );
+            const totalItems = await await db.UserInChatroom.count({
+                where: {
+                    member,
+                },
+            });
+
+            const totalPages =
+                totalItems / pageSize >= 1
+                    ? Math.ceil(totalItems / pageSize)
+                    : 1;
             resolve({
                 chatrooms,
                 pagination: {
-                    orderBy,
-                    page,
-                    pageSize,
-                    orderDirection,
+                    orderBy: queries.orderBy,
+                    page: queries.offset + 1,
+                    pageSize: queries.limit,
+                    orderDirection: queries.orderDirection,
                     totalItems,
                     totalPages,
                 },
@@ -52,10 +128,14 @@ export const getChatroom = (chatroomModel) =>
 export const createChatroom = (name) =>
     new Promise(async (resolve, reject) => {
         try {
-            const resp = await db.Chatroom.create({
-                name,
-            });
-            resolve(resp);
+            const resp = await db.Chatroom.create(
+                {
+                    name,
+                },
+                { plain: true }
+            );
+            const rawResp = resp.get({ plain: true });
+            resolve(rawResp);
         } catch (error) {
             reject(error);
         }

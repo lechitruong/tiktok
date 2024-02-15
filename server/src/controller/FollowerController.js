@@ -6,21 +6,11 @@ class FollowController {
     async getListFollower(req, res) {
         try {
             const { userId } = req.params;
-            const { page, pageSize, orderBy, orderDirection } = req.body;
-            let followers;
-            if (!page || !pageSize || !orderBy || !orderDirection) {
-                followers = await followerServices.getListFollower(userId);
-            } else {
-                followers = await followerServices.getListFollower(
-                    userId,
-                    page,
-                    pageSize,
-                    orderBy,
-                    orderDirection
-                );
-            }
-
-            return res.status(200).json({ ...followers });
+            const followings = await followerServices.getListFollower(
+                userId,
+                req.query
+            );
+            return res.status(200).json({ ...followings });
         } catch (error) {
             console.log(error);
             return internalServerError(res);
@@ -29,19 +19,10 @@ class FollowController {
     async getListFollowing(req, res) {
         try {
             const { userId } = req.params;
-            const { page, pageSize, orderBy, orderDirection } = req.body;
-            let followings;
-            if (!page || !pageSize || !orderBy || !orderDirection) {
-                followings = await followerServices.getListFollowing(userId);
-            } else {
-                followings = await followerServices.getListFollowing(
-                    userId,
-                    page,
-                    pageSize,
-                    orderBy,
-                    orderDirection
-                );
-            }
+            const followings = await followerServices.getListFollowing(
+                userId,
+                req.query
+            );
             return res.status(200).json({ ...followings });
         } catch (error) {
             console.log(error);
@@ -67,15 +48,13 @@ class FollowController {
             });
             if (isFriend) {
                 // Create chatroom
-                let newChatroom = await chatroomServices.createChatroom('');
-                newChatroom = newChatroom.dataValues;
-                console.log(newChatroom);
+                const newChatroom = await chatroomServices.createChatroom('');
                 // Add member into chatroom
-                await userInChatroomServices.addUserInChatroom(
+                await userInChatroomServices.addUserIntoChatroom(
                     req.user.id,
                     newChatroom.id
                 );
-                await userInChatroomServices.addUserInChatroom(
+                await userInChatroomServices.addUserIntoChatroom(
                     userId,
                     newChatroom.id
                 );
@@ -111,11 +90,11 @@ class FollowController {
                         userId
                     );
                 // Remove user from chatroom
-                await userInChatroomServices.removeUserInChatroom(
+                await userInChatroomServices.removeUserFromChatroom(
                     req.user.id,
                     chatroomId
                 );
-                await userInChatroomServices.removeUserInChatroom(
+                await useFromChatroomServices.removeUserFromChatroom(
                     userId,
                     chatroomId
                 );
