@@ -1,0 +1,161 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "Tiktok",
+    "dateExported": "2024-02-15T14:32:57.573Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "f26d4345-0b5b-4387-9cf3-e52f97e87cff",
+            "colId": "6c347e79-3365-4425-8aea-89a46b26f00d",
+            "containerId": "",
+            "name": "Register",
+            "url": "http://localhost:8000/api/v1/auth/register",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-02-10T21:15:05.506Z",
+            "modified": "2024-02-15T13:14:58.718Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\" : \"phuonganh@gmail.com\",\n  \"fullName\" : \"Hoàng Huy Dev\",\n  \"userName\" : \"phuonganhcute\",\n  \"password\" : \"user\",\n  \"association\" : \"\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "d07e1e49-e5d8-466c-ac19-5ab32e0e9021",
+            "colId": "6c347e79-3365-4425-8aea-89a46b26f00d",
+            "containerId": "",
+            "name": "Login",
+            "url": "http://localhost:8000/api/v1/auth/login",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-02-10T21:39:42.485Z",
+            "modified": "2024-02-15T13:19:49.468Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\" : \"phuonganh@gmail.com\",\n  \"password\" : \"user\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "b82a7022-2e08-4794-8b42-58897f486441",
+            "colId": "6c347e79-3365-4425-8aea-89a46b26f00d",
+            "containerId": "",
+            "name": "Vertify Email",
+            "url": "http://localhost:8000/api/v1/auth/vertify-email",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2024-02-11T18:10:36.932Z",
+            "modified": "2024-02-15T13:15:07.002Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\" : \"phuonganh@gmail.com\",\n  \"otp\" : \"m1n1im\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "13930af7-e798-4093-af3d-504ac2a33f9e",
+            "colId": "6c347e79-3365-4425-8aea-89a46b26f00d",
+            "containerId": "",
+            "name": "Get User",
+            "url": "http://localhost:8000/api/v1/user/10",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2024-02-14T09:21:17.032Z",
+            "modified": "2024-02-15T13:16:23.537Z",
+            "headers": [
+                {
+                    "name": "Token",
+                    "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiZW1haWwiOiJob2FuZ2h1eWRldkBnbWFpbC5jb20iLCJyb2xlVmFsdWUiOiJBZG1pbiIsImlhdCI6MTcwODAwMjk2MSwiZXhwIjoxNzA4NDM0OTYxfQ.hsoDmswSdvSoQRbJBYsJ9sv2j33WVFoCVr4ZSo3-SYvwW7Gao88KgTShrK0JwsDLmxRJVjtAa5ZfUcbwAhXu1hS9Z4W3jn0b3xO67ZhOsAjI8xc2KzGSjtwMhy1q0oaZYM9IlzErxJxpXYnq8XEMt5zcRuJB9tLiexPLvMJWLH9JRm9-R80rom2AJiM8QgCpkCFHxDfwsnJVXElgG_ot87mBjVZA7AQ9sVtSalnppefG7DklYOvO4qjG7UvZw8M5H2Uf8Vm_CbAa-C7Fd4NeNGk9nqWEp37ZAPi_GzL9xOADmDm2joboO2ZEA38kSmeqxEBTsdQH7rHhn3SDckVALg"
+                }
+            ],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "c60cef70-804e-4cb3-be6d-9e551dd28234",
+            "colId": "6c347e79-3365-4425-8aea-89a46b26f00d",
+            "containerId": "",
+            "name": "Follow User",
+            "url": "http://localhost:8000/api/v1/follow/9",
+            "method": "POST",
+            "sortNum": 50000,
+            "created": "2024-02-15T12:58:12.816Z",
+            "modified": "2024-02-15T13:20:02.122Z",
+            "headers": [
+                {
+                    "name": "Token",
+                    "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImVtYWlsIjoicGh1b25nYW5oQGdtYWlsLmNvbSIsInJvbGVWYWx1ZSI6IlVzZXIiLCJpYXQiOjE3MDgwMDMxODksImV4cCI6MTcwODQzNTE4OX0.k6je0bJeXyfSGl9JsBi2sJcydo96FaCSDj3Zd-yT3K1N3OmcONuQ1oNO1PjPQOB0Y8XLcaxgIoSAdNAIeztpzbccoRtOBy1EDubVOElfE_oXLbQjIIyHoM4pw_IwfzMNKfLYDiLu9tpDjxjG71p6_GeO1a21fFYPVDfz8-bJ_ZfCRKZcQJN0IzkgI_ka-tAHrsoHhHPlieYbuk_XWkG9mJpaBIPkeTRUBSD2hCfhRMtiH05YxSmgNuibhCxpOYC0IYKcrDdyLMBgB3sLzpRjfQuFrN0fgowftEvTuKWmGqOhEdktow0DrmTIRZFmmZxHI6iwuwxWU5S5zE7C9LfjcA"
+                }
+            ],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "b9fc77c9-f780-46e0-bb19-80cacb671f01",
+            "colId": "6c347e79-3365-4425-8aea-89a46b26f00d",
+            "containerId": "",
+            "name": "Unfollow User",
+            "url": "http://localhost:8000/api/v1/follow/9",
+            "method": "DELETE",
+            "sortNum": 60000,
+            "created": "2024-02-15T13:52:14.036Z",
+            "modified": "2024-02-15T13:52:29.537Z",
+            "headers": [
+                {
+                    "name": "Token",
+                    "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImVtYWlsIjoicGh1b25nYW5oQGdtYWlsLmNvbSIsInJvbGVWYWx1ZSI6IlVzZXIiLCJpYXQiOjE3MDgwMDMxODksImV4cCI6MTcwODQzNTE4OX0.k6je0bJeXyfSGl9JsBi2sJcydo96FaCSDj3Zd-yT3K1N3OmcONuQ1oNO1PjPQOB0Y8XLcaxgIoSAdNAIeztpzbccoRtOBy1EDubVOElfE_oXLbQjIIyHoM4pw_IwfzMNKfLYDiLu9tpDjxjG71p6_GeO1a21fFYPVDfz8-bJ_ZfCRKZcQJN0IzkgI_ka-tAHrsoHhHPlieYbuk_XWkG9mJpaBIPkeTRUBSD2hCfhRMtiH05YxSmgNuibhCxpOYC0IYKcrDdyLMBgB3sLzpRjfQuFrN0fgowftEvTuKWmGqOhEdktow0DrmTIRZFmmZxHI6iwuwxWU5S5zE7C9LfjcA"
+                }
+            ],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "bdaca991-b7ab-4052-a1d1-3a2fcab6417c",
+            "colId": "6c347e79-3365-4425-8aea-89a46b26f00d",
+            "containerId": "",
+            "name": "Get List Follower",
+            "url": "http://localhost:8000/api/v1/follow/followers/9",
+            "method": "GET",
+            "sortNum": 70000,
+            "created": "2024-02-15T14:20:50.118Z",
+            "modified": "2024-02-15T14:21:38.958Z",
+            "headers": [
+                {
+                    "name": "Token",
+                    "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImVtYWlsIjoicGh1b25nYW5oQGdtYWlsLmNvbSIsInJvbGVWYWx1ZSI6IlVzZXIiLCJpYXQiOjE3MDgwMDMxODksImV4cCI6MTcwODQzNTE4OX0.k6je0bJeXyfSGl9JsBi2sJcydo96FaCSDj3Zd-yT3K1N3OmcONuQ1oNO1PjPQOB0Y8XLcaxgIoSAdNAIeztpzbccoRtOBy1EDubVOElfE_oXLbQjIIyHoM4pw_IwfzMNKfLYDiLu9tpDjxjG71p6_GeO1a21fFYPVDfz8-bJ_ZfCRKZcQJN0IzkgI_ka-tAHrsoHhHPlieYbuk_XWkG9mJpaBIPkeTRUBSD2hCfhRMtiH05YxSmgNuibhCxpOYC0IYKcrDdyLMBgB3sLzpRjfQuFrN0fgowftEvTuKWmGqOhEdktow0DrmTIRZFmmZxHI6iwuwxWU5S5zE7C9LfjcA"
+                }
+            ],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "18500145-a56d-4e9b-96e0-2a62a06a5c8b",
+            "colId": "6c347e79-3365-4425-8aea-89a46b26f00d",
+            "containerId": "",
+            "name": "Get List Following",
+            "url": "http://localhost:8000/api/v1/follow/followings/9",
+            "method": "GET",
+            "sortNum": 80000,
+            "created": "2024-02-15T14:29:49.007Z",
+            "modified": "2024-02-15T14:30:06.038Z",
+            "headers": [
+                {
+                    "name": "Token",
+                    "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImVtYWlsIjoicGh1b25nYW5oQGdtYWlsLmNvbSIsInJvbGVWYWx1ZSI6IlVzZXIiLCJpYXQiOjE3MDgwMDMxODksImV4cCI6MTcwODQzNTE4OX0.k6je0bJeXyfSGl9JsBi2sJcydo96FaCSDj3Zd-yT3K1N3OmcONuQ1oNO1PjPQOB0Y8XLcaxgIoSAdNAIeztpzbccoRtOBy1EDubVOElfE_oXLbQjIIyHoM4pw_IwfzMNKfLYDiLu9tpDjxjG71p6_GeO1a21fFYPVDfz8-bJ_ZfCRKZcQJN0IzkgI_ka-tAHrsoHhHPlieYbuk_XWkG9mJpaBIPkeTRUBSD2hCfhRMtiH05YxSmgNuibhCxpOYC0IYKcrDdyLMBgB3sLzpRjfQuFrN0fgowftEvTuKWmGqOhEdktow0DrmTIRZFmmZxHI6iwuwxWU5S5zE7C9LfjcA"
+                }
+            ],
+            "params": [],
+            "tests": []
+        }
+    ]
+}

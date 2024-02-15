@@ -9,7 +9,7 @@ export const getChatroomsOfUser = (
 ) =>
     new Promise(async (resolve, reject) => {
         try {
-            const resp = await db.Chatroom.findAll({
+            const chatrooms = await db.Chatroom.findAll({
                 where: {
                     id,
                 },
@@ -17,7 +17,23 @@ export const getChatroomsOfUser = (
                 limit: pageSize,
                 offset: (page - 1) * pageSize,
             });
-            resolve(resp);
+            const totalItems = await db.Chatroom.count({
+                where: {
+                    followee: userId,
+                },
+            });
+            const totalPages = Math.ceil(totalItems / pageSize);
+            resolve({
+                chatrooms,
+                pagination: {
+                    orderBy,
+                    page,
+                    pageSize,
+                    orderDirection,
+                    totalItems,
+                    totalPages,
+                },
+            });
         } catch (error) {
             reject(error);
         }

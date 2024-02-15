@@ -9,7 +9,7 @@ export const getListMessageOfChatroom = async (
 ) =>
     new Promise(async (resolve, reject) => {
         try {
-            const resp = await db.Message.findAll({
+            const messages = await db.Message.findAll({
                 where: {
                     chatroomId,
                 },
@@ -17,7 +17,23 @@ export const getListMessageOfChatroom = async (
                 limit: pageSize,
                 offset: (page - 1) * pageSize,
             });
-            resolve(resp);
+            const totalItems = await db.Message.count({
+                where: {
+                    chatroomId,
+                },
+            });
+            const totalPages = Math.ceil(totalItems / pageSize);
+            resolve({
+                messages,
+                pagination: {
+                    orderBy,
+                    page,
+                    pageSize,
+                    orderDirection,
+                    totalItems,
+                    totalPages,
+                },
+            });
         } catch (error) {
             reject(error);
         }

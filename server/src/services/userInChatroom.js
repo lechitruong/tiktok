@@ -1,5 +1,37 @@
 import { Op } from 'sequelize';
 import db from '../models';
+export const getUsersInChatroom = (chatroomId) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const usersInChatroom = await db.UserInChatroom.findAll({
+                where: {
+                    chatroomId,
+                },
+                order: [[orderBy, orderDirection]],
+                limit: pageSize,
+                offset: (page - 1) * pageSize,
+            });
+            const totalItems = await db.UserInChatroom.count({
+                where: {
+                    chatroomId,
+                },
+            });
+            const totalPages = Math.ceil(totalItems / pageSize);
+            resolve({
+                usersInChatroom,
+                pagination: {
+                    orderBy,
+                    page,
+                    pageSize,
+                    orderDirection,
+                    totalItems,
+                    totalPages,
+                },
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
 export const findChatroomIdWithMembers = (...memberIds) =>
     new Promise(async (resolve, reject) => {
         try {
