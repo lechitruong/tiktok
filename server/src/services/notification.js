@@ -1,9 +1,9 @@
-import { Op } from 'sequelize';
+import { Op, where } from 'sequelize';
 import db from '../models';
 import { pagingConfig } from '../utils/pagination';
-export const getListMessageOfChatroom = async (
-    chatroomId,
-    { page, pageSize, orderBy, orderDirection, content }
+export const getNotifications = (
+    userId,
+    { page, pageSize, orderBy, orderDirection }
 ) =>
     new Promise(async (resolve, reject) => {
         try {
@@ -13,32 +13,22 @@ export const getListMessageOfChatroom = async (
                 orderBy,
                 orderDirection
             );
-            const query = {};
-            if (content) query.content = { [Op.substring]: content };
-            if (chatroomId) query.chatroomId = chatroomId;
-            const messages = await db.Message.findAll({
-                where: query,
+            const users = await db.Notification.findAll({
+                where: { userId },
                 attributes: {
-                    exclude: ['sender'],
+                    exclude: ['userId', 'updatedAt'],
                 },
-                include: [
-                    {
-                        model: db.User,
-                        as: 'senderInfo',
-                        attributes: ['id', 'userName', 'fullName', 'avatar'],
-                    },
-                ],
                 ...queries,
             });
-            const totalItems = await db.Message.count({
-                where: query,
+            const totalItems = await db.Notification.count({
+                where: { userId },
             });
             const totalPages =
                 totalItems / pageSize >= 1
                     ? Math.ceil(totalItems / pageSize)
                     : 1;
             resolve({
-                messages,
+                users,
                 pagination: {
                     orderBy: queries.orderBy,
                     page: queries.offset + 1,
@@ -52,12 +42,11 @@ export const getListMessageOfChatroom = async (
             reject(error);
         }
     });
-export const sendMessage = (sender, chatroomId, content) =>
-    new Promise(async (resolve, reject) => {
+export const insertNotification = (userId, content) =>
+    new Promise((resolve, reject) => {
         try {
-            const resp = await db.Message.create({
-                sender,
-                chatroomId,
+            const resp = db.Notification.create({
+                userId,
                 content,
             });
             resolve(resp);
@@ -65,17 +54,16 @@ export const sendMessage = (sender, chatroomId, content) =>
             reject(error);
         }
     });
-export const recallMessage = (id, sender) =>
+export const removeNotification = (id) =>
     new Promise(async (resolve, reject) => {
         try {
-            const resp = await db.Message.destroy({
-                where: {
-                    sender,
-                    id,
-                },
+            const resp = await db.Notification.findOne({
+                where: { id },
             });
-            if (resp) resolve(resp);
-            else resolve(null);
+            if (resp) {
+                await resp.destroy();
+                resolve(resp);
+            } else resolve(null);
         } catch (error) {
             reject(error);
         }

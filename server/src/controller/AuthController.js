@@ -8,7 +8,12 @@ const path = require('path');
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { otpTemplateMail, sendMail } from '../utils/MailUtil';
-import { badRequest, internalServerError, notFound } from '../utils/handleResp';
+import {
+    alreadyExistRow,
+    badRequest,
+    internalServerError,
+    notFound,
+} from '../utils/handleResp';
 let refreshTokenList = [];
 class AuthController {
     generateAccessToken = (user) => {
@@ -77,10 +82,10 @@ class AuthController {
                     user: { ...other },
                 });
             } else {
-                return res.status(200).json({
-                    err: 1,
-                    mes: 'Email or username already registered',
-                });
+                return alreadyExistRow(
+                    'Email already exists or account not vertify',
+                    res
+                );
             }
         } catch (error) {
             return internalServerError(res);

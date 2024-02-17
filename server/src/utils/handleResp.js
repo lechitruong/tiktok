@@ -34,3 +34,10 @@ export const unauthorized = (err, res) => {
         mes: err,
     });
 };
+export const alreadyExistRow = (err, res) => {
+    const error = createError.Conflict(er);
+    return res.status(error.status).json({
+        err: 1,
+        mes: err,
+    });
+};

@@ -33,7 +33,7 @@ class Auth {
         new Auth().origin(req, res, () => {
             if (
                 req.user.id == req.params.userId ||
-                req.user.roleValue === 'Admin'
+                req.user.roleValue == 'Admin'
             )
                 next();
             else return forBidden('You are not allowed to access', res);
@@ -57,7 +57,8 @@ class Auth {
     }
     isAdmin(req, res, next) {
         new Auth().origin(req, res, () => {
-            if (req.user.roleValue === 'Admin') {
+            console.log(req.user);
+            if (req.user.roleValue != 'Admin') {
                 return forBidden('You are not allowed to access', res);
             }
             next();
@@ -65,11 +66,11 @@ class Auth {
     }
     isModerator(req, res, next) {
         new Auth().origin(req, res, () => {
-            if (req.user.roleValue === 'Moderator') {
+            if (req.user.roleValue != 'Moderator') {
                 return forBidden('You are not allowed to access', res);
             }
             next();
         });
     }
 }
-module.exports = new Auth();
+export default new Auth();

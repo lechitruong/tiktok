@@ -28,14 +28,17 @@ export const findUsers = ({
             const totalItems = await db.User.count({
                 where: query,
             });
-            const totalPages = Math.ceil(totalItems / pageSize);
+            const totalPages =
+                totalItems / pageSize >= 1
+                    ? Math.ceil(totalItems / pageSize)
+                    : 1;
             resolve({
                 users,
                 pagination: {
-                    orderBy,
-                    page,
-                    pageSize,
-                    orderDirection,
+                    orderBy: queries.orderBy,
+                    page: queries.offset + 1,
+                    pageSize: queries.limit,
+                    orderDirection: queries.orderDirection,
                     totalItems,
                     totalPages,
                 },

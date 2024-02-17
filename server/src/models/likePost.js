@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
         {
             sequelize,
             modelName: 'LikePost',
+            tableName: 'likespost',
         }
     );
     return LikePost;

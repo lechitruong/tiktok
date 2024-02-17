@@ -9,6 +9,11 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            Post.belongsTo(models.User, {
+                foreignKey: 'poster',
+                targetKey: 'id',
+                as: 'posterInfo',
+            });
         }
     }
     Post.init(
@@ -20,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
             comments: DataTypes.INTEGER,
             views: DataTypes.INTEGER,
             shares: DataTypes.INTEGER,
+            poster: DataTypes.INTEGER,
         },
         {
             sequelize,

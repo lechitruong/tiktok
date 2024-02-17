@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
         {
             sequelize,
             modelName: 'LikeComment',
+            tableName: 'likescomment',
         }
     );
     return LikeComment;
