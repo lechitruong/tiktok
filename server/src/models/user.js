@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
                 targetKey: 'code',
                 as: 'roleData',
             });
+            User.belongsTo(models.Avatar, {
+                foreignKey: 'avatarPublicId',
+                targetKey: 'publicId',
+                as: 'avatarData',
+            });
         }
     }
     User.init(
@@ -24,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
             roleCode: DataTypes.STRING,
             password: DataTypes.STRING,
             association: DataTypes.STRING,
-            avatar: DataTypes.STRING,
+            avatarPublicId: DataTypes.STRING,
             isVertified: DataTypes.BOOLEAN,
         },
         {

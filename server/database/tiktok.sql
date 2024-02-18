@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 17, 2024 at 10:00 PM
+-- Generation Time: Feb 18, 2024 at 10:22 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -20,6 +20,29 @@ SET time_zone = "+00:00";
 --
 -- Database: `tiktok`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `avatars`
+--
+
+CREATE TABLE `avatars` (
+  `id` int(11) NOT NULL,
+  `publicId` varchar(255) DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `code` varchar(255) DEFAULT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `avatars`
+--
+
+INSERT INTO `avatars` (`id`, `publicId`, `url`, `code`, `createdAt`, `updatedAt`) VALUES
+(7, 'tiktok_avatar/qrabjbofeuu20wpg28o0', 'https://res.cloudinary.com/da5wewzih/image/upload/v1708242262/tiktok_avatar/qrabjbofeuu20wpg28o0.png', 'defaultAvatar', '2024-02-18 08:53:40', '2024-02-18 08:53:40'),
+(9, 'tiktok_avatar/swpwgwenns4f8zbzbbuq', 'http://res.cloudinary.com/da5wewzih/image/upload/v1708247822/tiktok_avatar/swpwgwenns4f8zbzbbuq.jpg', 'avatarOfUser1', '2024-02-18 09:15:39', '2024-02-18 09:15:39');
 
 -- --------------------------------------------------------
 
@@ -61,13 +84,6 @@ CREATE TABLE `chatrooms` (
   `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
   `updatedAt` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `chatrooms`
---
-
-INSERT INTO `chatrooms` (`id`, `name`, `createdAt`, `updatedAt`) VALUES
-(1, '', '2024-02-17 20:50:06', '2024-02-17 20:50:06');
 
 -- --------------------------------------------------------
 
@@ -116,14 +132,6 @@ CREATE TABLE `followers` (
   `updatedAt` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `followers`
---
-
-INSERT INTO `followers` (`id`, `follower`, `followee`, `createdAt`, `updatedAt`) VALUES
-(1, 1, 2, '2024-02-17 20:49:36', '2024-02-17 20:49:36'),
-(2, 2, 1, '2024-02-17 20:50:06', '2024-02-17 20:50:06');
-
 -- --------------------------------------------------------
 
 --
@@ -167,14 +175,6 @@ CREATE TABLE `messages` (
   `updatedAt` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `messages`
---
-
-INSERT INTO `messages` (`id`, `sender`, `content`, `chatroomId`, `createdAt`, `updatedAt`) VALUES
-(1, 1, 'Hi Huy', 1, '2024-02-17 20:51:48', '2024-02-17 20:51:48'),
-(2, 1, 'Are u fine?', 1, '2024-02-17 20:52:15', '2024-02-17 20:52:15');
-
 -- --------------------------------------------------------
 
 --
@@ -189,15 +189,6 @@ CREATE TABLE `notifications` (
   `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
   `updatedAt` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `notifications`
---
-
-INSERT INTO `notifications` (`id`, `userId`, `content`, `isSeen`, `createdAt`, `updatedAt`) VALUES
-(2, 1, 'New Notify Test', 0, '2024-02-17 20:31:29', '2024-02-17 20:31:29'),
-(3, 1, 'New Notify Test 3', 0, '2024-02-17 20:31:38', '2024-02-17 20:31:38'),
-(4, 1, 'New Notify Test 4', 0, '2024-02-17 20:31:41', '2024-02-17 20:31:41');
 
 -- --------------------------------------------------------
 
@@ -218,8 +209,7 @@ CREATE TABLE `otps` (
 --
 
 INSERT INTO `otps` (`id`, `email`, `otp`, `createdAt`, `updatedAt`) VALUES
-(1, 'phuonganh@gmail.com', 'l93k1q', '2024-02-17 20:00:04', '2024-02-17 20:00:04'),
-(2, 'hoanghuydev@gmail.com', '6jioqw', '2024-02-17 20:48:47', '2024-02-17 20:48:47');
+(1, 'hoanghuydev@gmail.com', 'r5689o', '2024-02-18 08:54:07', '2024-02-18 08:54:07');
 
 -- --------------------------------------------------------
 
@@ -259,9 +249,9 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`id`, `code`, `value`, `createdAt`, `updatedAt`) VALUES
-(1, 'R1', 'Admin', '2024-02-17 19:58:49', '2024-02-17 19:58:49'),
-(2, 'R2', 'Moderator', '2024-02-17 19:58:49', '2024-02-17 19:58:49'),
-(3, 'R3', 'User', '2024-02-17 19:58:49', '2024-02-17 19:58:49');
+(1, 'R1', 'Admin', '2024-02-17 12:58:49', '2024-02-17 12:58:49'),
+(2, 'R2', 'Moderator', '2024-02-17 12:58:49', '2024-02-17 12:58:49'),
+(3, 'R3', 'User', '2024-02-17 12:58:49', '2024-02-17 12:58:49');
 
 -- --------------------------------------------------------
 
@@ -278,6 +268,7 @@ CREATE TABLE `sequelizemeta` (
 --
 
 INSERT INTO `sequelizemeta` (`name`) VALUES
+('create-avatar.js'),
 ('create-category.js'),
 ('create-catogoryOfPost.js'),
 ('create-chatroom.js'),
@@ -307,7 +298,7 @@ CREATE TABLE `users` (
   `email` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `association` varchar(255) DEFAULT '',
-  `avatar` varchar(255) DEFAULT NULL,
+  `avatarPublicId` varchar(255) DEFAULT NULL,
   `isVertified` tinyint(1) DEFAULT 0,
   `roleCode` varchar(255) DEFAULT 'R3',
   `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -318,9 +309,8 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `fullName`, `userName`, `email`, `password`, `association`, `avatar`, `isVertified`, `roleCode`, `createdAt`, `updatedAt`) VALUES
-(1, 'Phương Anh', 'phuonganhcute', 'phuonganh@gmail.com', '$2b$10$zFDmzy6p3xubWivp0T81WOSGM5X5qUWVYMiu7hqX54CtG13balUfe', '', NULL, 1, 'R1', '2024-02-17 20:00:04', '2024-02-17 20:00:04'),
-(2, 'Hoàng Huy', 'hoanghuydev', 'hoanghuydev@gmail.com', '$2b$10$M8gqdn2RAkfcJR6US6b2ieXUfc.oUlQqyEWpG9x62zCSkk8aL73jS', '', NULL, 1, 'R3', '2024-02-17 20:48:47', '2024-02-17 20:48:47');
+INSERT INTO `users` (`id`, `fullName`, `userName`, `email`, `password`, `association`, `avatarPublicId`, `isVertified`, `roleCode`, `createdAt`, `updatedAt`) VALUES
+(1, 'Hoàng Huy', 'hoanghuydev', 'hoanghuydev@gmail.com', '$2b$10$MPv./DsceAX80/W94dZ2jOFdc4U9GZMyh4d7VCQNZRG.sz60orWwy', '', 'tiktok_avatar/swpwgwenns4f8zbzbbuq', 1, 'R3', '2024-02-18 08:54:07', '2024-02-18 09:17:03');
 
 -- --------------------------------------------------------
 
@@ -337,22 +327,23 @@ CREATE TABLE `usersinchatroom` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `usersinchatroom`
---
-
-INSERT INTO `usersinchatroom` (`id`, `member`, `chatroomId`, `createdAt`, `updatedAt`) VALUES
-(1, 2, 1, '2024-02-17 20:50:06', '2024-02-17 20:50:06'),
-(2, 1, 1, '2024-02-17 20:50:06', '2024-02-17 20:50:06');
-
---
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `avatars`
+--
+ALTER TABLE `avatars`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `publicId` (`publicId`),
+  ADD UNIQUE KEY `url` (`url`);
 
 --
 -- Indexes for table `categories`
 --
 ALTER TABLE `categories`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`);
 
 --
 -- Indexes for table `categoriesofpost`
@@ -456,6 +447,7 @@ ALTER TABLE `sequelizemeta`
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `userName` (`userName`),
+  ADD KEY `avatarPublicId` (`avatarPublicId`),
   ADD KEY `roleCode` (`roleCode`);
 
 --
@@ -469,6 +461,12 @@ ALTER TABLE `usersinchatroom`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `avatars`
+--
+ALTER TABLE `avatars`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -486,7 +484,7 @@ ALTER TABLE `categoriesofpost`
 -- AUTO_INCREMENT for table `chatrooms`
 --
 ALTER TABLE `chatrooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `commentspost`
@@ -504,7 +502,7 @@ ALTER TABLE `commentsreply`
 -- AUTO_INCREMENT for table `followers`
 --
 ALTER TABLE `followers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `likescomment`
@@ -522,19 +520,19 @@ ALTER TABLE `likespost`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `otps`
 --
 ALTER TABLE `otps`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `posts`
@@ -546,19 +544,19 @@ ALTER TABLE `posts`
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `usersinchatroom`
 --
 ALTER TABLE `usersinchatroom`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -629,7 +627,8 @@ ALTER TABLE `posts`
 -- Constraints for table `users`
 --
 ALTER TABLE `users`
-  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`roleCode`) REFERENCES `roles` (`code`);
+  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`avatarPublicId`) REFERENCES `avatars` (`publicId`),
+  ADD CONSTRAINT `users_ibfk_2` FOREIGN KEY (`roleCode`) REFERENCES `roles` (`code`);
 
 --
 -- Constraints for table `usersinchatroom`

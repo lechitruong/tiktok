@@ -22,7 +22,19 @@ export const findUsers = ({
             if (fullName) query.fullName = { [Op.substring]: fullName };
             const users = await db.User.findAll({
                 where: query,
-                attributes: ['id', 'userName', 'fullName', 'avatar'],
+                attributes: ['id', 'userName', 'fullName'],
+                include: [
+                    {
+                        model: db.Avatar,
+                        as: 'avatarData',
+                        attributes: { exclude: ['createdAt', 'updatedAt'] },
+                    },
+                    {
+                        model: db.Role,
+                        as: 'roleData',
+                        attributes: ['id', 'code', 'value'],
+                    },
+                ],
                 ...queries,
             });
             const totalItems = await db.User.count({
@@ -47,11 +59,12 @@ export const findUsers = ({
             reject(error);
         }
     });
-export const updateUser = (newDataUser, email) =>
+export const updateUser = (newDataUser, id) =>
     new Promise((resolve, reject) => {
         try {
             const resp = db.User.update(newDataUser, {
-                where: { email },
+                where: { id },
+                raw: true,
             });
             resolve(resp);
         } catch (error) {
@@ -68,9 +81,14 @@ export const findOne = (user) =>
                 },
                 include: [
                     {
+                        model: db.Avatar,
+                        as: 'avatarData',
+                        attributes: { exclude: ['createdAt', 'updatedAt'] },
+                    },
+                    {
                         model: db.Role,
                         as: 'roleData',
-                        attributes: ['id', 'value'],
+                        attributes: ['id', 'code', 'value'],
                     },
                 ],
             });

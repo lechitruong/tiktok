@@ -9,7 +9,6 @@ import route from './routes';
 import startCron from './cron';
 startCron();
 dotenv.config();
-
 const { Server } = require('socket.io');
 const handleSocket = require('./socket');
 getConnection();

@@ -26,8 +26,13 @@ module.exports = {
                 type: Sequelize.STRING,
                 defaultValue: '',
             },
-            avatar: {
+            avatarPublicId: {
                 type: Sequelize.STRING,
+                defaultValue: 'tiktok_avatar/qrabjbofeuu20wpg28o0',
+                references: {
+                    model: 'Avatars',
+                    key: 'publicId',
+                },
             },
             isVertified: {
                 type: Sequelize.BOOLEAN,
