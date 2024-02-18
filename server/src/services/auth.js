@@ -3,7 +3,14 @@ import db, { Sequelize } from '../models';
 import bcrypt from 'bcrypt';
 const hashPassword = (password) =>
     bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-export const register = (email, fullName, userName, password, association) =>
+export const register = (
+    email,
+    fullName,
+    userName,
+    password,
+    association,
+    isVertified
+) =>
     new Promise(async (resolve, reject) => {
         try {
             password = hashPassword(password);
@@ -15,6 +22,7 @@ export const register = (email, fullName, userName, password, association) =>
                     userName,
                     password,
                     association,
+                    isVertified,
                 },
             });
             resolve(resp);

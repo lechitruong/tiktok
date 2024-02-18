@@ -59,7 +59,8 @@ class AuthController {
                 fullName,
                 userName,
                 password,
-                association
+                association,
+                false
             );
             if (resp[1]) {
                 const otp = otpGenerator.generate(6, {
@@ -89,6 +90,60 @@ class AuthController {
             }
         } catch (error) {
             console.log(error);
+            return internalServerError(res);
+        }
+    }
+    async authFacebook(req, res) {
+        try {
+            console.log(req.user);
+            return res
+                .status(200)
+                .json({
+                    err: 0,
+                    mes: 'Logged in successfully',
+                    user: req.user,
+                });
+        } catch (error) {
+            return internalServerError(res);
+        }
+    }
+    async authGoogle(req, res) {
+        try {
+            const email = req.user.emails[0].value;
+            const fullName = req.user.displayName;
+            const userName = req.user.provider + req.user.id;
+            const association = req.user.provider;
+            const password = 'noneedpass#';
+            const resp = await authServices.register(
+                email,
+                fullName,
+                userName,
+                password,
+                association,
+                true
+            );
+            let user = await userServices.findOne({
+                email,
+                association,
+                userName,
+            });
+            const accessToken = new AuthController().generateAccessToken(user);
+            const refreshToken = new AuthController().generateRefreshToken(
+                user
+            );
+            refreshTokenList.push(refreshToken);
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                secure: false,
+                path: '/',
+            });
+            return res.status(200).json({
+                err: 0,
+                mes: 'Login successful',
+                user,
+                accessToken,
+            });
+        } catch (error) {
             return internalServerError(res);
         }
     }
@@ -123,6 +178,7 @@ class AuthController {
             const user = await userServices.findOne({
                 email,
                 isVertified: true,
+                association: '',
             });
             if (user == null)
                 return notFound('Email not registered or not verified', res);

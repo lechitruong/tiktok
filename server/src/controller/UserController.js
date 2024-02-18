@@ -98,6 +98,25 @@ class UserController {
             return internalServerError(res);
         }
     }
+    async removeAvatar(req, res) {
+        try {
+            const { userId } = req.params;
+            const user = await userServices.findOne({ id: userId });
+            const publicId = user.avatarData.publicId;
+            const removeAvatar = await avatarServices.removeAvatar(
+                userId,
+                publicId
+            );
+            if (removeAvatar)
+                return res.status(200).json({
+                    err: 0,
+                    mes: 'Removed avatar',
+                });
+            else return badRequest('Remove avatar failed', res);
+        } catch (error) {
+            return internalServerError(res);
+        }
+    }
     async updateUser(req, res) {
         try {
             const { userName, fullName } = req.body;

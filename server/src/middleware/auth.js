@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const fs = require('fs');
 const path = require('path');
+const passport = require('passport');
 const {
     forBidden,
     unauthorized,
@@ -10,6 +11,24 @@ const {
 import { log } from 'console';
 import * as userInChatroomServices from '../services/userInChatroom';
 class Auth {
+    authGoogle(req, res, next) {
+        passport.authenticate('google', (err, profile) => {
+            if (err) console.log(err);
+            else {
+                req.user = profile;
+                next();
+            }
+        })(req, res, next);
+    }
+    authFacebook(req, res, next) {
+        passport.authenticate('facebook', (err, profile) => {
+            if (err) console.log(err);
+            else {
+                req.user = profile;
+                next();
+            }
+        })(req, res, next);
+    }
     origin(req, res, next) {
         const token = req.headers.token;
         if (!token) {

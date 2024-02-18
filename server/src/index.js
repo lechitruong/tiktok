@@ -9,6 +9,7 @@ import route from './routes';
 import startCron from './cron';
 startCron();
 dotenv.config();
+require('./config/oauth/passport');
 const { Server } = require('socket.io');
 const handleSocket = require('./socket');
 getConnection();
