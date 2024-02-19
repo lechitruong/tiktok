@@ -11,9 +11,14 @@ router.get(
         session: false,
     })
 );
-router.get('/google/callback', Auth.authGoogle, AuthController.authGoogle);
+router.get('/google/callback', Auth.authGoogle, AuthController.OAuth2);
 router.get('/facebook', passport.authenticate('facebook'));
-router.get('/facebook/callback', Auth.authFacebook, AuthController.authGoogle);
+router.get('/facebook/callback', Auth.authFacebook, AuthController.OAuth2);
+router.get(
+    '/github',
+    passport.authenticate('github', { scope: ['user:email'] })
+);
+router.get('/github/callback', Auth.authGithub, AuthController.OAuth2);
 router.post('/vertify-email', AuthController.vertifyAccount);
 router.post('/login', AuthController.login);
 module.exports = router;

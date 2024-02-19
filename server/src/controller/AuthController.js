@@ -93,40 +93,10 @@ class AuthController {
             return internalServerError(res);
         }
     }
-    async authFacebook(req, res) {
+
+    async OAuth2(req, res) {
         try {
-            console.log(req.user);
-            return res
-                .status(200)
-                .json({
-                    err: 0,
-                    mes: 'Logged in successfully',
-                    user: req.user,
-                });
-        } catch (error) {
-            return internalServerError(res);
-        }
-    }
-    async authGoogle(req, res) {
-        try {
-            const email = req.user.emails[0].value;
-            const fullName = req.user.displayName;
-            const userName = req.user.provider + req.user.id;
-            const association = req.user.provider;
-            const password = 'noneedpass#';
-            const resp = await authServices.register(
-                email,
-                fullName,
-                userName,
-                password,
-                association,
-                true
-            );
-            let user = await userServices.findOne({
-                email,
-                association,
-                userName,
-            });
+            const user = req.user;
             const accessToken = new AuthController().generateAccessToken(user);
             const refreshToken = new AuthController().generateRefreshToken(
                 user
@@ -137,12 +107,10 @@ class AuthController {
                 secure: false,
                 path: '/',
             });
-            return res.status(200).json({
-                err: 0,
-                mes: 'Login successful',
-                user,
-                accessToken,
-            });
+            res.redirect(
+                process.env.URL_CLIENT +
+                    `/login-success/${user.id}?accessToken=${accessToken}`
+            );
         } catch (error) {
             return internalServerError(res);
         }

@@ -29,6 +29,16 @@ class Auth {
             }
         })(req, res, next);
     }
+    authGithub(req, res, next) {
+        passport.authenticate('github', (err, profile) => {
+            if (err) console.log(err);
+            else {
+                req.user = profile;
+                next();
+            }
+        })(req, res, next);
+    }
+
     origin(req, res, next) {
         const token = req.headers.token;
         if (!token) {
