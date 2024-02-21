@@ -29,6 +29,14 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 defaultValue: 0,
             },
+            poster: {
+                allowNull: false,
+                type: Sequelize.INTEGER,
+                references: {
+                    model: 'Users',
+                    key: 'id',
+                },
+            },
             title: {
                 allowNull: false,
                 type: Sequelize.STRING,
@@ -41,6 +49,16 @@ module.exports = {
             videoUrl: {
                 allowNull: false,
                 type: Sequelize.STRING,
+            },
+            thumnailId: {
+                allowNull: false,
+                type: Sequelize.STRING,
+                defaultValue: '',
+            },
+            videoId: {
+                allowNull: false,
+                type: Sequelize.STRING,
+                defaultValue: '',
             },
             shares: {
                 allowNull: false,

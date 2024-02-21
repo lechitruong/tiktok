@@ -1,6 +1,6 @@
 import * as userServices from '../services/user';
 import { badRequest, internalServerError, notFound } from '../utils/handleResp';
-const cloudinary = require('cloudinary').v2;
+import UploadFile from '../utils/uploadFile';
 import * as avatarServices from '../services/avatar';
 class UserController {
     async findUser(req, res) {
@@ -34,14 +34,9 @@ class UserController {
     async updateAvatar(req, res) {
         try {
             const avatarImage = req.file.buffer;
+
             if (!req.file) return badRequest('Please choose avatar', res);
             const { userId } = req.params;
-            cloudinary.config({
-                cloud_name: process.env.CLOUDINARY_DB_NAME,
-                api_key: process.env.CLOUDINARY_API_KEY,
-                api_secret: process.env.CLOUDINARY_API_SECRET,
-                secure: true,
-            });
 
             const user = await userServices.findOne({
                 id: userId,
@@ -49,50 +44,36 @@ class UserController {
             const oldPublicId = user.avatarData.publicId;
 
             if (user.avatarData.code != process.env.CODE_DEFAULT_AVATAR) {
-                await cloudinary.api.delete_resources([oldPublicId], {
-                    type: 'upload',
-                    resource_type: 'image',
-                });
+                await UploadFile.removeFromCloudinary(
+                    oldPublicId,
+                    process.env.IMAGE_TYPE_FILE
+                );
             }
-            cloudinary.uploader
-                .upload_stream(
-                    { folder: 'tiktok_avatar', resource_type: 'image' },
-                    (error, result) => {
-                        if (error) {
-                            console.error(
-                                'Error uploading to Cloudinary:',
-                                error
-                            );
-                            return internalServerError(res);
-                        }
-                        const avatarModel = {
-                            publicId: result.public_id,
-                            url: result.url,
-                            code: 'avatarOfUser' + userId,
-                        };
-                        avatarServices
-                            .updateAvatar(oldPublicId, userId, avatarModel)
-                            .then((resp) => {
-                                if (resp) {
-                                    userServices
-                                        .findOne({ id: userId })
-                                        .then((userData) => {
-                                            return res.status(200).json({
-                                                err: 0,
-                                                mes:
-                                                    'Uploaded avatar of user ' +
-                                                    userId,
-                                                user: userData,
-                                            });
-                                        });
-                                } else
-                                    return badRequest(
-                                        'Something error occurred'
-                                    );
+            const avatarUploaded = await UploadFile.uploadToCloudinary(
+                avatarImage,
+                process.env.IMAGE_TYPE_FILE,
+                process.env.FOLDER_AVATAR
+            );
+            const avatarModel = {
+                publicId: avatarUploaded.public_id,
+                url: avatarUploaded.url,
+                code: 'avatarOfUser' + userId,
+            };
+            await avatarServices
+                .updateAvatar(oldPublicId, userId, avatarModel)
+                .then((resp) => {
+                    if (resp) {
+                        userServices
+                            .findOne({ id: userId })
+                            .then((userData) => {
+                                return res.status(200).json({
+                                    err: 0,
+                                    mes: 'Uploaded avatar of user ' + userId,
+                                    user: userData,
+                                });
                             });
-                    }
-                )
-                .end(avatarImage);
+                    } else return badRequest('Something error occurred');
+                });
         } catch (error) {
             console.log(error);
             return internalServerError(res);
@@ -101,19 +82,28 @@ class UserController {
     async removeAvatar(req, res) {
         try {
             const { userId } = req.params;
+
             const user = await userServices.findOne({ id: userId });
             const publicId = user.avatarData.publicId;
+            if (publicId == process.env.PUBLIC_ID_DEFAULT_AVATAR)
+                return badRequest('Not have avatar to remove', res);
             const removeAvatar = await avatarServices.removeAvatar(
                 userId,
                 publicId
             );
-            if (removeAvatar)
+
+            if (removeAvatar) {
+                await UploadFile.removeFromCloudinary(
+                    process.env.IMAGE_TYPE_FILE,
+                    publicId
+                );
                 return res.status(200).json({
                     err: 0,
                     mes: 'Removed avatar',
                 });
-            else return badRequest('Remove avatar failed', res);
+            } else return badRequest('Remove avatar failed', res);
         } catch (error) {
+            console.log(error);
             return internalServerError(res);
         }
     }

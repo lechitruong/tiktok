@@ -1,5 +1,6 @@
 /server/node_modules
 /server/.env
+/server/src/config/credentials.json
 
 /client/.env
 /client/node_modules

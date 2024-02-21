@@ -41,7 +41,6 @@ export const updateAvatar = (oldPublicId, userId, { publicId, url, code }) =>
 export const removeAvatar = (userId, publicId) =>
     new Promise(async (resolve, reject) => {
         try {
-            if (publicId == process.env.PUBLIC_ID_DEFAULT_AVATAR) resolve(null);
             const updateAvatarIdOfUser = await userServices.updateUser(
                 {
                     avatarPublicId: process.env.PUBLIC_ID_DEFAULT_AVATAR,

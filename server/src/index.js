@@ -12,6 +12,7 @@ import startCron from './cron';
 startCron();
 dotenv.config();
 require('./config/oauth/passport');
+global._basedir = __dirname;
 const { Server } = require('socket.io');
 const handleSocket = require('./socket');
 getConnection();
