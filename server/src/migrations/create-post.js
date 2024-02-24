@@ -42,23 +42,20 @@ module.exports = {
                 type: Sequelize.STRING,
             },
             thumnailUrl: {
-                allowNull: false,
+                allowNull: true,
                 type: Sequelize.STRING,
-                defaultValue: '',
             },
             videoUrl: {
-                allowNull: false,
+                allowNull: true,
                 type: Sequelize.STRING,
             },
             thumnailId: {
-                allowNull: false,
+                allowNull: true,
                 type: Sequelize.STRING,
-                defaultValue: '',
             },
             videoId: {
-                allowNull: false,
+                allowNull: true,
                 type: Sequelize.STRING,
-                defaultValue: '',
             },
             shares: {
                 allowNull: false,

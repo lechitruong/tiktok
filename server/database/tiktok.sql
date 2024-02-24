@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 18, 2024 at 10:22 AM
+-- Generation Time: Feb 24, 2024 at 09:02 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -41,8 +41,7 @@ CREATE TABLE `avatars` (
 --
 
 INSERT INTO `avatars` (`id`, `publicId`, `url`, `code`, `createdAt`, `updatedAt`) VALUES
-(7, 'tiktok_avatar/qrabjbofeuu20wpg28o0', 'https://res.cloudinary.com/da5wewzih/image/upload/v1708242262/tiktok_avatar/qrabjbofeuu20wpg28o0.png', 'defaultAvatar', '2024-02-18 08:53:40', '2024-02-18 08:53:40'),
-(9, 'tiktok_avatar/swpwgwenns4f8zbzbbuq', 'http://res.cloudinary.com/da5wewzih/image/upload/v1708247822/tiktok_avatar/swpwgwenns4f8zbzbbuq.jpg', 'avatarOfUser1', '2024-02-18 09:15:39', '2024-02-18 09:15:39');
+(1, 'tiktok_avatar/qrabjbofeuu20wpg28o0', 'https://res.cloudinary.com/da5wewzih/image/upload/v1708242262/tiktok_avatar/qrabjbofeuu20wpg28o0.png', 'defaultAvatar', '2024-02-24 06:38:02', '2024-02-24 06:38:02');
 
 -- --------------------------------------------------------
 
@@ -209,7 +208,7 @@ CREATE TABLE `otps` (
 --
 
 INSERT INTO `otps` (`id`, `email`, `otp`, `createdAt`, `updatedAt`) VALUES
-(1, 'hoanghuydev@gmail.com', 'r5689o', '2024-02-18 08:54:07', '2024-02-18 08:54:07');
+(1, 'hoanghuydev@gmail.com', 'kw4zfm', '2024-02-24 06:39:20', '2024-02-24 06:39:20');
 
 -- --------------------------------------------------------
 
@@ -223,12 +222,22 @@ CREATE TABLE `posts` (
   `views` int(11) NOT NULL DEFAULT 0,
   `comments` int(11) NOT NULL DEFAULT 0,
   `shares` int(11) NOT NULL,
+  `poster` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
-  `thumnailUrl` varchar(255) NOT NULL DEFAULT '',
-  `videoUrl` varchar(255) NOT NULL,
+  `thumnailUrl` varchar(255) DEFAULT NULL,
+  `videoUrl` varchar(255) DEFAULT NULL,
+  `thumnailId` varchar(255) DEFAULT NULL,
+  `videoId` varchar(255) DEFAULT NULL,
   `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
   `updatedAt` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `posts`
+--
+
+INSERT INTO `posts` (`id`, `likes`, `views`, `comments`, `shares`, `poster`, `title`, `thumnailUrl`, `videoUrl`, `thumnailId`, `videoId`, `createdAt`, `updatedAt`) VALUES
+(6, 0, 0, 0, 0, 1, 'How to marketing for Facebook', 'https://drive.google.com/uc?export=view&id=1f4Y6RdqdqAFWBI9t8hQKtWzuz3cLPnQV', 'http://res.cloudinary.com/da5wewzih/video/upload/v1708759993/tiktok_video/m0foyhbtwuknzhmjeetb.mp4', '1f4Y6RdqdqAFWBI9t8hQKtWzuz3cLPnQV', 'tiktok_video/m0foyhbtwuknzhmjeetb', '2024-02-24 07:33:04', '2024-02-24 07:33:18');
 
 -- --------------------------------------------------------
 
@@ -249,9 +258,9 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`id`, `code`, `value`, `createdAt`, `updatedAt`) VALUES
-(1, 'R1', 'Admin', '2024-02-17 12:58:49', '2024-02-17 12:58:49'),
-(2, 'R2', 'Moderator', '2024-02-17 12:58:49', '2024-02-17 12:58:49'),
-(3, 'R3', 'User', '2024-02-17 12:58:49', '2024-02-17 12:58:49');
+(1, 'R1', 'Admin', '2024-02-17 05:58:49', '2024-02-17 05:58:49'),
+(2, 'R2', 'Moderator', '2024-02-17 05:58:49', '2024-02-17 05:58:49'),
+(3, 'R3', 'User', '2024-02-17 05:58:49', '2024-02-17 05:58:49');
 
 -- --------------------------------------------------------
 
@@ -282,8 +291,24 @@ INSERT INTO `sequelizemeta` (`name`) VALUES
 ('create-otp.js'),
 ('create-post.js'),
 ('create-role.js'),
+('create-tmpPost.js'),
 ('create-user.js'),
 ('create-userInChatroom.js');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tmpposts`
+--
+
+CREATE TABLE `tmpposts` (
+  `id` int(11) NOT NULL,
+  `postId` int(11) NOT NULL,
+  `videoUrl` varchar(255) NOT NULL,
+  `videoId` varchar(255) NOT NULL DEFAULT '',
+  `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -298,7 +323,7 @@ CREATE TABLE `users` (
   `email` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `association` varchar(255) DEFAULT '',
-  `avatarPublicId` varchar(255) DEFAULT NULL,
+  `avatarPublicId` varchar(255) DEFAULT 'tiktok_avatar/qrabjbofeuu20wpg28o0',
   `isVertified` tinyint(1) DEFAULT 0,
   `roleCode` varchar(255) DEFAULT 'R3',
   `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -310,7 +335,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `fullName`, `userName`, `email`, `password`, `association`, `avatarPublicId`, `isVertified`, `roleCode`, `createdAt`, `updatedAt`) VALUES
-(1, 'Hoàng Huy', 'hoanghuydev', 'hoanghuydev@gmail.com', '$2b$10$MPv./DsceAX80/W94dZ2jOFdc4U9GZMyh4d7VCQNZRG.sz60orWwy', '', 'tiktok_avatar/swpwgwenns4f8zbzbbuq', 1, 'R3', '2024-02-18 08:54:07', '2024-02-18 09:17:03');
+(1, 'Hoàng Huy', 'hoanghuydev', 'hoanghuydev@gmail.com', '$2b$10$E1mmN84Cvmr2urQYPcXcMO0GCmHfSZOCivONt1szhhasrhuhmD7zW', '', 'tiktok_avatar/qrabjbofeuu20wpg28o0', 1, 'R3', '2024-02-24 06:39:20', '2024-02-24 06:39:20');
 
 -- --------------------------------------------------------
 
@@ -425,7 +450,8 @@ ALTER TABLE `otps`
 --
 ALTER TABLE `posts`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `shares` (`shares`);
+  ADD KEY `shares` (`shares`),
+  ADD KEY `poster` (`poster`);
 
 --
 -- Indexes for table `roles`
@@ -440,6 +466,13 @@ ALTER TABLE `roles`
 ALTER TABLE `sequelizemeta`
   ADD PRIMARY KEY (`name`),
   ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Indexes for table `tmpposts`
+--
+ALTER TABLE `tmpposts`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `postId` (`postId`);
 
 --
 -- Indexes for table `users`
@@ -466,7 +499,7 @@ ALTER TABLE `usersinchatroom`
 -- AUTO_INCREMENT for table `avatars`
 --
 ALTER TABLE `avatars`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -538,13 +571,19 @@ ALTER TABLE `otps`
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `tmpposts`
+--
+ALTER TABLE `tmpposts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -621,7 +660,13 @@ ALTER TABLE `notifications`
 -- Constraints for table `posts`
 --
 ALTER TABLE `posts`
-  ADD CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`shares`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `posts_ibfk_2` FOREIGN KEY (`poster`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `tmpposts`
+--
+ALTER TABLE `tmpposts`
+  ADD CONSTRAINT `tmpposts_ibfk_1` FOREIGN KEY (`postId`) REFERENCES `posts` (`id`);
 
 --
 -- Constraints for table `users`

@@ -7,7 +7,7 @@ export const getPosts = (
 ) =>
     new Promise(async (resolve, reject) => {
         try {
-            const queryPaging = pagingConfig(
+            const queries = pagingConfig(
                 page,
                 pageSize,
                 orderBy,
@@ -20,20 +20,35 @@ export const getPosts = (
                 query.include = [
                     {
                         model: db.User,
-                        attributes: ['id', 'userName', 'fullName', 'avatar'],
+                        attributes: ['id', 'userName', 'fullName'],
+                        as: 'posterInfo',
                         where: { id: userId },
+                        include: [
+                            {
+                                model: db.Avatar,
+                                attributes: ['url'],
+                                as: 'avatarData',
+                            },
+                        ],
                     },
                 ];
             else
                 query.include = [
                     {
                         model: db.User,
-                        attributes: ['id', 'userName', 'fullName', 'avatar'],
+                        attributes: ['id', 'userName', 'fullName'],
+                        as: 'posterInfo',
+                        include: [
+                            {
+                                model: db.Avatar,
+                                attributes: ['url'],
+                                as: 'avatarData',
+                            },
+                        ],
                     },
                 ];
-            const posts = await db.Post.findAll(
-                Object.assign(query, queryPaging)
-            );
+            const getPostsQuery = Object.assign(query, queries);
+            const posts = await db.Post.findAll(getPostsQuery);
             const totalItems = await db.Post.count(query);
             const totalPages =
                 totalItems / pageSize >= 1
@@ -54,14 +69,40 @@ export const getPosts = (
             reject(error);
         }
     });
-export const insertPost = (
+
+export const getOne = (id) =>
+    new Promise((resolve, reject) => {
+        try {
+            const post = db.Post.findOne({
+                where: { id },
+                include: [
+                    {
+                        model: db.User,
+                        attributes: ['id', 'userName', 'fullName'],
+                        as: 'posterInfo',
+                        include: [
+                            {
+                                model: db.Avatar,
+                                attributes: ['url'],
+                                as: 'avatarData',
+                            },
+                        ],
+                    },
+                ],
+            });
+            resolve(post);
+        } catch (error) {
+            reject(error);
+        }
+    });
+export const insertPost = ({
     poster,
     title,
     thumnailUrl,
     thumnailId,
     videoUrl,
-    videoId
-) =>
+    videoId,
+}) =>
     new Promise((resolve, reject) => {
         try {
             const resp = db.Post.create({
@@ -81,6 +122,19 @@ export const removePost = (id) =>
     new Promise(async (resolve, reject) => {
         try {
             const resp = await db.Post.destroy({
+                where: {
+                    id,
+                },
+            });
+            resolve(resp);
+        } catch (error) {
+            reject(error);
+        }
+    });
+export const updatePost = (id, postModel) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const resp = await db.Post.update(postModel, {
                 where: {
                     id,
                 },

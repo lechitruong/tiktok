@@ -3,6 +3,7 @@ import UploadFile from '../utils/uploadFile';
 const path = require('path');
 import * as postServices from '../services/post';
 import { uuidv4 } from 'uuid';
+import * as tmpPostServices from '../services/tmpPost';
 class PostController {
     async getPostById(req, res) {
         try {
@@ -30,7 +31,7 @@ class PostController {
             return res.status(200).json({
                 err: 0,
                 mes: '',
-                posts,
+                ...posts,
             });
         } catch (error) {
             console.log(error);
@@ -40,17 +41,45 @@ class PostController {
     async upload(req, res) {
         try {
             const { files } = req;
-            const uploadedFiles = [];
-            console.log(files);
-            const video = files.filter((file) => file.fieldname == 'video');
+            const poster = req.user.id;
+            const { title } = req.body;
+            const post = await postServices.insertPost({ poster, title });
+            const video = files.filter((file) => file.fieldname == 'video')[0];
+
             const thumnail = files.filter(
                 (file) => file.fieldname == 'thumnail'
+            )[0];
+
+            const videoUploadMain = await UploadFile.uploadToCloudinary(
+                video.buffer,
+                process.env.VIDEO_TYPE_FILE,
+                process.env.CLOUDINARY_FOLDER_VIDEO
             );
+
             const thumnailUpload = await UploadFile.uploadToGGDriver(
                 thumnail,
-                'thumnailPost'
+                'thumnailPost' + post.id,
+                process.env.GG_DRIVE_FOLDER_THUMNAIL_ID
             );
-            return res.json(uploadedFiles);
+            const videoUploadTmp = await UploadFile.uploadToGGDriver(
+                video,
+                'videoPost' + post.id,
+                process.env.GG_DRIVE_FOLDER_VIDEO_ID
+            );
+            await postServices.updatePost(post.id, {
+                videoId: videoUploadMain.id,
+                videoUrl: videoUploadMain.url,
+                thumnailId: thumnailUpload.id,
+                thumnailUrl: thumnailUpload.url,
+            });
+
+            const postUpdated = postServices.getOne(post.id);
+            await tmpPostServices.insert({
+                postId: postUpdated.id,
+                videoId: postUpdated.videoId,
+                videoUrl: postUpdated.videoUrl,
+            });
+            return res.json(postUpdated);
         } catch (error) {
             console.log(error);
             return internalServerError(res);

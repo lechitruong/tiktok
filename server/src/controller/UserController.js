@@ -52,10 +52,10 @@ class UserController {
             const avatarUploaded = await UploadFile.uploadToCloudinary(
                 avatarImage,
                 process.env.IMAGE_TYPE_FILE,
-                process.env.FOLDER_AVATAR
+                process.env.CLOUDINARY_FOLDER_AVATAR
             );
             const avatarModel = {
-                publicId: avatarUploaded.public_id,
+                publicId: avatarUploaded.id,
                 url: avatarUploaded.url,
                 code: 'avatarOfUser' + userId,
             };

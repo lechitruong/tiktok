@@ -1,8 +1,8 @@
 import removeOTPCron from './removeOTPCron';
-
+import updateVideoUrlCron from './updateVideoUrlCron';
 const startCron = () => {
-    console.log('Run cron');
     removeOTPCron();
+    updateVideoUrlCron();
 };
 
 export default startCron;

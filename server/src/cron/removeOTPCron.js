@@ -3,7 +3,8 @@ import { Op } from 'sequelize';
 import * as otpServices from '../services/otp';
 
 const removeOTPCron = () => {
-    cron.schedule('* * * * * *', async function () {
+    cron.schedule('0 0 * * * *', async function () {
+        console.log('Remove otp expired cron');
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         await otpServices.deleteOTP({
@@ -12,7 +13,6 @@ const removeOTPCron = () => {
             },
         });
     });
-    console.log('Remove otp expired');
 };
 
 export default removeOTPCron;

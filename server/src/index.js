@@ -23,6 +23,7 @@ app.use(
         extended: true,
     })
 );
+
 const server = app.listen(port, function () {
     console.log('Server listening on port ' + port);
 });
@@ -34,6 +35,7 @@ const io = new Server(server, {
         credentials: true,
     },
 });
+
 route(app);
 
 handleSocket(io);

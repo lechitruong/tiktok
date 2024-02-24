@@ -18,7 +18,7 @@ class UploadFile {
         });
     };
 
-    async uploadToGGDriver(file, fileName) {
+    async uploadToGGDriver(file, fileName, folderId) {
         const bufferStream = new Stream.PassThrough();
         bufferStream.end(file.buffer);
         const { data } = await google
@@ -33,14 +33,13 @@ class UploadFile {
                 },
                 requestBody: {
                     name: fileName,
-                    parents: [process.env.GG_DRIVE_FOLDER_ID],
+                    parents: [folderId],
                 },
                 fields: 'id,name',
             });
         return {
             id: data.id,
             url: `https://drive.google.com/uc?export=view&id=${data.id}`,
-            name: data.name,
         };
     }
     async removeFromGGDriver(fileId) {
@@ -56,12 +55,6 @@ class UploadFile {
     }
     async uploadToCloudinary(fileBuffer, typeFile, folderName) {
         this.authCloundinary();
-        cloudinary.config({
-            cloud_name: process.env.CLOUDINARY_DB_NAME,
-            api_key: process.env.CLOUDINARY_API_KEY,
-            api_secret: process.env.CLOUDINARY_API_SECRET,
-            secure: true,
-        });
         return new Promise((resolve, reject) => {
             cloudinary.uploader
                 .upload_stream(
@@ -70,7 +63,11 @@ class UploadFile {
                         if (error) {
                             reject(error);
                         } else {
-                            resolve(result);
+                            const data = {
+                                id: result.public_id,
+                                url: result.url,
+                            };
+                            resolve(data);
                         }
                     }
                 )
