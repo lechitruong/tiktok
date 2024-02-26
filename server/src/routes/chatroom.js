@@ -12,4 +12,17 @@ router.get(
     Auth.isInChatroom,
     ChatroomController.getUsersInChatroom
 );
+router.get('/:chatroomId', Auth.isInChatroom, ChatroomController.getChatroom);
+router.post(
+    '/:chatroomId/user/:userId',
+    Auth.isInChatroom,
+    Auth.isFriend,
+    ChatroomController.addUserIntoChatroom
+);
+router.delete(
+    '/:chatroomId/user/:userId',
+    Auth.isInChatroom,
+    Auth.isFriend,
+    ChatroomController.removeUserFromChatroom
+);
 module.exports = router;

@@ -5,6 +5,27 @@ import * as postServices from '../services/post';
 import { uuidv4 } from 'uuid';
 import * as tmpPostServices from '../services/tmpPost';
 class PostController {
+    async likePost(req, res) {
+        try {
+            return res.status(200).json({
+                err: 0,
+                mes: '',
+            });
+        } catch (error) {
+            return internalServerError(res);
+        }
+    }
+    async unlikePost(req, res) {
+        try {
+            return res.status(200).json({
+                err: 0,
+                mes: '',
+            });
+        } catch (error) {
+            return internalServerError(res);
+        }
+    }
+
     async getPostById(req, res) {
         try {
             const postList = await postServices.getPosts(

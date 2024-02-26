@@ -84,6 +84,21 @@ class Auth {
             }
         });
     }
+    isFriend(req, res, next) {
+        new Auth().origin(req, res, async () => {
+            try {
+                const isFriend = await followerServices.isFriend(
+                    req.user.id,
+                    userId
+                );
+                if (isFriend) next();
+                else return forBidden('You are not allowed to access', res);
+            } catch (error) {
+                console.log(error);
+                return internalServerError(res);
+            }
+        });
+    }
     isAdmin(req, res, next) {
         new Auth().origin(req, res, () => {
             console.log(req.user);

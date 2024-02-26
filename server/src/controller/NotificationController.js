@@ -17,6 +17,16 @@ class NotificationController {
             return internalServerError(res);
         }
     }
+    async seenNotify(req, res) {
+        try {
+            return res.status(200).json({
+                err: 0,
+                mes: '',
+            });
+        } catch (error) {
+            return internalServerError(res);
+        }
+    }
     async insertNotify(req, res) {
         try {
             const { userId } = req.params;

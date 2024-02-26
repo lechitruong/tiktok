@@ -3,7 +3,7 @@ import { Op } from 'sequelize';
 import * as tmpPostServices from '../services/tmpPost';
 import * as postServices from '../services/post';
 const updateVideoUrlCron = () => {
-    cron.schedule('0 * * * * *', async function () {
+    cron.schedule('0 0 * * * *', async function () {
         console.log('Update video url cron');
         let postOlder1Hour = await tmpPostServices.getTmpPostOver1Hour();
         postOlder1Hour = postOlder1Hour.postOlderThan1Hour;
