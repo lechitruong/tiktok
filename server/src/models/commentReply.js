@@ -10,8 +10,14 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             // define association here
             CommentReply.belongsTo(models.User, {
-                foreignKey: 'userId',
+                foreignKey: 'responder',
                 targetKey: 'id',
+                as: 'responderData',
+            });
+            CommentReply.belongsTo(models.CommentPost, {
+                foreignKey: 'commentPostId',
+                targetKey: 'id',
+                as: 'commentPostData',
             });
         }
     }

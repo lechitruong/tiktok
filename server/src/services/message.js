@@ -24,7 +24,7 @@ export const getListMessageOfChatroom = async (
                 include: [
                     {
                         model: db.User,
-                        as: 'senderInfo',
+                        as: 'senderData',
                         attributes: ['id', 'userName', 'fullName', 'avatar'],
                     },
                 ],

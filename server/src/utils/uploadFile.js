@@ -35,7 +35,7 @@ class UploadFile {
                     name: fileName,
                     parents: [folderId],
                 },
-                fields: 'id,name',
+                fields: 'id',
             });
         return {
             id: data.id,

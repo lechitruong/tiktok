@@ -1,4 +1,4 @@
-import { internalServerError } from '../utils/handleResp';
+import { badRequest, internalServerError } from '../utils/handleResp';
 import UploadFile from '../utils/uploadFile';
 const path = require('path');
 import * as postServices from '../services/post';
@@ -64,13 +64,22 @@ class PostController {
             const { files } = req;
             const poster = req.user.id;
             const { title } = req.body;
+            for (const file of files) {
+                if (file.size / (1024 * 1024) > 30)
+                    return badRequest(
+                        'Cannot upload file with size more than 30mb',
+                        res
+                    );
+            }
             const post = await postServices.insertPost({ poster, title });
             const video = files.filter((file) => file.fieldname == 'video')[0];
-
+            if (!video.mimetype.includes('video'))
+                return badRequest('Field video must be video type', res);
             const thumnail = files.filter(
                 (file) => file.fieldname == 'thumnail'
             )[0];
-
+            if (!thumnail.mimetype.includes('image'))
+                return badRequest('Field thumnail must be image type', res);
             const videoUploadMain = await UploadFile.uploadToCloudinary(
                 video.buffer,
                 process.env.VIDEO_TYPE_FILE,
@@ -84,7 +93,7 @@ class PostController {
             );
             const videoUploadTmp = await UploadFile.uploadToGGDriver(
                 video,
-                'videoPost' + post.id,
+                'videoPost' + post.id + '.mp4',
                 process.env.GG_DRIVE_FOLDER_VIDEO_ID
             );
             await postServices.updatePost(post.id, {
@@ -93,8 +102,7 @@ class PostController {
                 thumnailId: thumnailUpload.id,
                 thumnailUrl: thumnailUpload.url,
             });
-
-            const postUpdated = postServices.getOne(post.id);
+            const postUpdated = await postServices.getOne(post.id);
             await tmpPostServices.insert({
                 postId: postUpdated.id,
                 videoId: postUpdated.videoId,

@@ -12,10 +12,12 @@ module.exports = (sequelize, DataTypes) => {
             CommentPost.belongsTo(models.User, {
                 foreignKey: 'commenter',
                 targetKey: 'id',
+                as: 'commenterData',
             });
             CommentPost.belongsTo(models.Post, {
                 foreignKey: 'postId',
                 targetKey: 'id',
+                as: 'postData',
             });
         }
     }

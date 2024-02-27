@@ -21,7 +21,7 @@ export const getPosts = (
                     {
                         model: db.User,
                         attributes: ['id', 'userName', 'fullName'],
-                        as: 'posterInfo',
+                        as: 'posterData',
                         where: { id: userId },
                         include: [
                             {
@@ -37,7 +37,7 @@ export const getPosts = (
                     {
                         model: db.User,
                         attributes: ['id', 'userName', 'fullName'],
-                        as: 'posterInfo',
+                        as: 'posterData',
                         include: [
                             {
                                 model: db.Avatar,
@@ -79,7 +79,7 @@ export const getOne = (id) =>
                     {
                         model: db.User,
                         attributes: ['id', 'userName', 'fullName'],
-                        as: 'posterInfo',
+                        as: 'posterData',
                         include: [
                             {
                                 model: db.Avatar,

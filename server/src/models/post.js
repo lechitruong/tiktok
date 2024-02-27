@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
             Post.belongsTo(models.User, {
                 foreignKey: 'poster',
                 targetKey: 'id',
-                as: 'posterInfo',
+                as: 'posterData',
             });
         }
     }

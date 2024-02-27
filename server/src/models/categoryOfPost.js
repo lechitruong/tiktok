@@ -12,10 +12,12 @@ module.exports = (sequelize, DataTypes) => {
             CategoryOfPost.belongsTo(models.Category, {
                 foreignKey: 'categoryId',
                 targetKey: 'id',
+                as: 'categoryData',
             });
             CategoryOfPost.belongsTo(models.Post, {
                 foreignKey: 'postId',
                 targetKey: 'id',
+                as: 'postData',
             });
         }
     }

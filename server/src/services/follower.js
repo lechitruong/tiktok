@@ -27,12 +27,12 @@ export const getListFollowing = (
                 include: [
                     {
                         model: db.User,
-                        as: 'followerInfo',
+                        as: 'followerData',
                         attributes: ['id', 'name', 'fullName', 'avatar'],
                     },
                     {
                         model: db.User,
-                        as: 'followeeInfo',
+                        as: 'followeeData',
                         attributes: {
                             exclude: [
                                 'password',
@@ -96,7 +96,7 @@ export const getListFollower = (
                 include: [
                     {
                         model: db.User,
-                        as: 'followerInfo',
+                        as: 'followerData',
                         attributes: {
                             exclude: [
                                 'password',
@@ -109,7 +109,7 @@ export const getListFollower = (
                     },
                     {
                         model: db.User,
-                        as: 'followeeInfo',
+                        as: 'followeeData',
                         attributes: {
                             exclude: [
                                 'password',
