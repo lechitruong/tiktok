@@ -21,4 +21,5 @@ router.get(
 router.get('/github/callback', Auth.authGithub, AuthController.OAuth2);
 router.post('/vertify-email', AuthController.vertifyAccount);
 router.post('/login', AuthController.login);
+router.post('/token/refresh', AuthController.refreshToken);
 module.exports = router;

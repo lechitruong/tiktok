@@ -11,6 +11,7 @@ interface ButtonProps {
     fullWitdth? : boolean;
     danger? : boolean;
     className? :string
+    href? : string
 }
 const Button : React.FC<ButtonProps> = ({
     text,
@@ -22,11 +23,12 @@ const Button : React.FC<ButtonProps> = ({
     children,
     fullWitdth,
     danger,
-    className
+    className,
+    href
 }) => {
   return (
     <button 
-        onClick={onClick}
+        onClick={href ? () => window.location.href = href : onClick}
         type={type}
         disabled={disabled}
         className={clsx(`

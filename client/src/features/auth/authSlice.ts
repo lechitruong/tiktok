@@ -48,19 +48,25 @@ export interface InitStateAuthType {
     isLoading : boolean;
     isSuccess : boolean;
     message : string
+    accessToken : string
 }
 const initialState : InitStateAuthType = {
     user :null,
     isError : false,
     isSuccess : false,
     isLoading : false,
-    message : ''
+    message : '',
+    accessToken : ''
 }
 
 const authSlice = createSlice({
     name : 'auth',
     initialState,
-    reducers : {},
+    reducers : {
+        updateAccessToken : (state,action) => {
+            state.accessToken = action.payload.accessToken
+        }
+    },
     extraReducers : (builder) => {
         builder
             .addCase(register.pending,(state:InitStateAuthType)=> {
@@ -87,6 +93,7 @@ const authSlice = createSlice({
                 state.isSuccess = true;
                 const payload = action.payload as AuthPayload;
                 state.user = payload.user;
+                state.accessToken = payload.accessToken;
                 toast.success('Login successful', {
                     position: "top-right",
                     autoClose: 3000,
@@ -136,4 +143,7 @@ const authSlice = createSlice({
             })
     },
 })
+export const {
+    updateAccessToken
+} = authSlice.actions
 export default authSlice.reducer;
