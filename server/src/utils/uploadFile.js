@@ -39,7 +39,7 @@ class UploadFile {
             });
         return {
             id: data.id,
-            url: `https://drive.google.com/uc?export=view&id=${data.id}`,
+            url: `https://drive.usercontent.google.com/download?id=${data.id}&export=view&authuser=1`,
         };
     }
     async removeFromGGDriver(fileId) {

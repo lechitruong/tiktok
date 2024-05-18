@@ -1,6 +1,7 @@
-import { Op } from 'sequelize';
+import { Op, where } from 'sequelize';
 import db, { Sequelize } from '../models';
 import bcrypt from 'bcrypt';
+import { formatQueryUser, formatQueryUserWithAtrr } from './user';
 const hashPassword = (password) =>
     bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 export const register = (
@@ -16,6 +17,7 @@ export const register = (
             password = hashPassword(password);
             const resp = await db.User.findOrCreate({
                 where: { [Op.or]: [{ email }, { userName }] },
+                ...formatQueryUserWithAtrr,
                 defaults: {
                     email,
                     fullName,
@@ -43,4 +45,22 @@ export const vertifyAccount = (email, otp) =>
             reject(error);
         }
     });
-export const login = (email, password) => new Promise((resolve, reject) => {});
+export const login = (emailOrUserName) =>
+    new Promise((resolve, reject) => {
+        try {
+            const resp = db.User.findOne({
+                where: {
+                    [Op.or]: [
+                        { email: emailOrUserName },
+                        { userName: emailOrUserName },
+                    ],
+                    isVertified: true,
+                    association: '',
+                },
+                ...formatQueryUserWithAtrr,
+            });
+            resolve(resp);
+        } catch (error) {
+            reject(error);
+        }
+    });

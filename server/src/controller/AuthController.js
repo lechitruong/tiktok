@@ -54,6 +54,12 @@ class AuthController {
             association = association ? association : '';
             if (!email || !fullName || !userName || !password)
                 return badRequest('Please fill all required', res);
+            if (
+                !/^(([^<>()[]\\.,;:s@"]+(.[^<>()[]\\.,;:s@"]+)*)|(".+"))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/.test(
+                    email
+                )
+            )
+                return badRequest('Please enter a valid email address', res);
             const resp = await authServices.register(
                 email,
                 fullName,
@@ -79,7 +85,7 @@ class AuthController {
                 const { password, ...other } = resp[0];
                 return res.status(200).json({
                     err: 0,
-                    mes: 'Registered successfully, Your otp has been sent to email address',
+                    mes: 'Registered successfully, Your otp has been sent to email address. OTP will be expired in 5 minutes',
                     user: { ...other },
                 });
             } else {
@@ -119,20 +125,25 @@ class AuthController {
         try {
             const { email, otp } = req.body;
             const resp = await authServices.vertifyAccount(email, otp);
-            if (resp != null) {
-                const updateUser = await userServices.updateUser(
-                    {
-                        isVertified: true,
-                    },
-                    email
-                );
-                otpServices.deleteOTP({ email, otp });
-                return res.status(200).json({
-                    err: 0,
-                    mes: 'Verified successfully, now you can login',
-                });
+            const createdAt = new Date(resp.createdAt).getTime();
+            const now = new Date().getTime();
+            const fiveMinutes = 5 * 60 * 1000;
+            if (resp == null) {
+                return badRequest('OTP is not valid', res);
             }
-            return badRequest('OTP is not valid', res);
+            if (now - createdAt > fiveMinutes)
+                return badRequest('OTP has expired', res);
+            const updateUser = await userServices.updateUser(
+                {
+                    isVertified: true,
+                },
+                email
+            );
+            otpServices.deleteOTP({ email, otp });
+            return res.status(200).json({
+                err: 0,
+                mes: 'Verified successfully, now you can login',
+            });
         } catch (error) {
             console.log(error);
             return internalServerError(res);
@@ -140,22 +151,19 @@ class AuthController {
     }
     async login(req, res) {
         try {
-            const { email, password } = req.body;
-            if (!email && !password)
+            const { emailOrUsername, password } = req.body;
+            if (!emailOrUsername && !password)
                 return badRequest('Please fill all required', res);
-            const user = await userServices.findOne({
-                email,
-                isVertified: true,
-                association: '',
-            });
+            let user = await authServices.login(emailOrUsername);
             if (user == null)
-                return notFound('Email not registered or not verified', res);
+                return notFound('Account not found or not yet verified.', res);
             const validatePassword = bcrypt.compareSync(
                 password,
                 user.password
             );
             if (!validatePassword)
                 return badRequest('Password is incorrect', res);
+            user.password = '';
             const accessToken = new AuthController().generateAccessToken(user);
             const refreshToken = new AuthController().generateRefreshToken(
                 user

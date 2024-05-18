@@ -1,9 +1,8 @@
 import { Op, where } from 'sequelize';
 import db from '../models';
 import { pagingConfig } from '../utils/pagination';
-import { formatQueryUser } from './user';
-export const getPosts = (
-    postId,
+export const getLivestreams = (
+    livestreamId,
     { page, pageSize, orderBy, orderDirection, userId, title }
 ) =>
     new Promise(async (resolve, reject) => {
@@ -15,15 +14,15 @@ export const getPosts = (
                 orderDirection
             );
             const query = {};
-            if (postId || title) query.where = {};
-            if (postId) query.where.id = postId;
+            if (livestreamId || title) query.where = {};
+            if (livestreamId) query.where.id = livestreamId;
             if (title) query.where.title = { [Op.substring]: title };
             if (userId)
                 query.include = [
                     {
                         model: db.User,
                         attributes: ['id', 'userName', 'fullName'],
-                        as: 'posterData',
+                        as: 'streamerData',
                         where: { id: userId },
                         ...formatQueryUser,
                     },
@@ -33,23 +32,23 @@ export const getPosts = (
                     {
                         model: db.User,
                         attributes: ['id', 'userName', 'fullName'],
-                        as: 'posterData',
+                        as: 'streamerData',
                         ...formatQueryUser,
                     },
                 ];
-            const getPostsQuery = Object.assign(query, queries);
-            const posts = await db.Post.findAll(getPostsQuery);
-            const totalItems = await db.Post.count(query);
+            const getLivestreamQuery = Object.assign(query, queries);
+            const livestreams = await db.Livestream.findAll(getLivestreamQuery);
+            const totalItems = await db.Livestream.count(query);
             const totalPages =
                 totalItems / pageSize >= 1
                     ? Math.ceil(totalItems / pageSize)
                     : 1;
             resolve({
-                posts,
+                livestreams,
                 pagination: {
                     orderBy: queries.orderBy,
                     page: queries.offset + 1,
-                    pageSize: posts.length,
+                    pageSize: livestreams.length,
                     orderDirection: queries.orderDirection,
                     totalItems,
                     totalPages,
@@ -63,57 +62,31 @@ export const getPosts = (
 export const getOne = (id) =>
     new Promise((resolve, reject) => {
         try {
-            const post = db.Post.findOne({
+            const livestream = db.Livestream.findOne({
                 where: { id },
                 include: [
                     {
                         model: db.User,
                         attributes: ['id', 'userName', 'fullName'],
-                        as: 'posterData',
-                        include: [
-                            {
-                                model: db.Avatar,
-                                attributes: ['url'],
-                                as: 'avatarData',
-                            },
-                        ],
+                        as: 'streamerData',
+                        ...formatQueryUser,
                     },
                 ],
             });
-            resolve(post);
+            resolve(livestream);
         } catch (error) {
             reject(error);
         }
     });
-export const insertPost = ({
-    poster,
-    title,
-    thumnailUrl,
-    thumnailId,
-    videoUrl,
-    videoId,
-}) =>
+export const insertLivestream = ({ streamer, title, key }) =>
     new Promise((resolve, reject) => {
         try {
-            const resp = db.Post.create({
-                poster,
-                title,
-                thumnailUrl,
-                thumnailId,
-                videoUrl,
-                videoId,
-            });
-            resolve(resp);
-        } catch (error) {
-            reject(error);
-        }
-    });
-export const removePost = (id) =>
-    new Promise(async (resolve, reject) => {
-        try {
-            const resp = await db.Post.destroy({
-                where: {
-                    id,
+            const resp = db.Post.findOrCreate({
+                where: { status: 1, key },
+                defaults: {
+                    streamer,
+                    title,
+                    key,
                 },
             });
             resolve(resp);
@@ -121,32 +94,15 @@ export const removePost = (id) =>
             reject(error);
         }
     });
-export const updatePost = (id, postModel) =>
+export const updateLivestream = (id, livestreamModel) =>
     new Promise(async (resolve, reject) => {
         try {
-            const resp = await db.Post.update(postModel, {
+            const resp = await db.Livestream.update(livestreamModel, {
                 where: {
                     id,
                 },
             });
             resolve(resp);
-        } catch (error) {
-            reject(error);
-        }
-    });
-export const isFriend = (userId1, userId2) =>
-    new Promise(async (resolve, reject) => {
-        try {
-            const isFollow = await followerServices.getFollower({
-                follower: userId1,
-                followee: userId2,
-            });
-            const isFollow2 = await followerServices.getFollower({
-                follower: userId2,
-                followee: userId1,
-            });
-            if (isFollow && isFollow2) resolve(true);
-            else resolve(false);
         } catch (error) {
             reject(error);
         }

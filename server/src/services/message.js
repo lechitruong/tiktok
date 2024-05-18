@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
 import db from '../models';
 import { pagingConfig } from '../utils/pagination';
+import { formatQueryUser } from './user';
 export const getListMessageOfChatroom = async (
     chatroomId,
     { page, pageSize, orderBy, orderDirection, content }
@@ -26,6 +27,7 @@ export const getListMessageOfChatroom = async (
                         model: db.User,
                         as: 'senderData',
                         attributes: ['id', 'userName', 'fullName', 'avatar'],
+                        ...formatQueryUser,
                     },
                 ],
                 ...queries,

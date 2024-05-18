@@ -1,6 +1,37 @@
 import { Op, where } from 'sequelize';
 import db from '../models';
 import { pagingConfig } from '../utils/pagination';
+export const formatQueryUserWithAtrr = {
+    attributes: {
+        exclude: ['roleCode', 'avatarPublicId'],
+    },
+    include: [
+        {
+            model: db.Avatar,
+            as: 'avatarData',
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
+        },
+        {
+            model: db.Role,
+            as: 'roleData',
+            attributes: ['id', 'code', 'value'],
+        },
+    ],
+};
+export const formatQueryUser = {
+    include: [
+        {
+            model: db.Avatar,
+            as: 'avatarData',
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
+        },
+        {
+            model: db.Role,
+            as: 'roleData',
+            attributes: ['id', 'code', 'value'],
+        },
+    ],
+};
 export const findUsers = ({
     page,
     pageSize,
@@ -23,18 +54,7 @@ export const findUsers = ({
             const users = await db.User.findAll({
                 where: query,
                 attributes: ['id', 'userName', 'fullName'],
-                include: [
-                    {
-                        model: db.Avatar,
-                        as: 'avatarData',
-                        attributes: { exclude: ['createdAt', 'updatedAt'] },
-                    },
-                    {
-                        model: db.Role,
-                        as: 'roleData',
-                        attributes: ['id', 'code', 'value'],
-                    },
-                ],
+                ...formatQueryUser,
                 ...queries,
             });
             const totalItems = await db.User.count({
@@ -79,18 +99,7 @@ export const findOne = (user) =>
                 attributes: {
                     exclude: ['roleCode'],
                 },
-                include: [
-                    {
-                        model: db.Avatar,
-                        as: 'avatarData',
-                        attributes: { exclude: ['createdAt', 'updatedAt'] },
-                    },
-                    {
-                        model: db.Role,
-                        as: 'roleData',
-                        attributes: ['id', 'code', 'value'],
-                    },
-                ],
+                ...formatQueryUserWithAtrr,
             });
             resolve(resp);
         } catch (error) {

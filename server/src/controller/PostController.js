@@ -3,7 +3,6 @@ import UploadFile from '../utils/uploadFile';
 const path = require('path');
 import * as postServices from '../services/post';
 import { uuidv4 } from 'uuid';
-import * as tmpPostServices from '../services/tmpPost';
 class PostController {
     async likePost(req, res) {
         try {
@@ -32,11 +31,13 @@ class PostController {
                 req.params.postId,
                 req.query
             );
-            return res.status(200).json({
-                err: 0,
-                mes: '',
-                post: postList.posts[0],
-            });
+            if (postList.posts[0])
+                return res.status(200).json({
+                    err: 0,
+                    mes: '',
+                    post: postList.posts[0],
+                });
+            else return badRequest('Not found post', res);
         } catch (error) {
             console.log(error);
             return internalServerError(res);
@@ -103,11 +104,6 @@ class PostController {
                 thumnailUrl: thumnailUpload.url,
             });
             const postUpdated = await postServices.getOne(post.id);
-            await tmpPostServices.insert({
-                postId: postUpdated.id,
-                videoId: postUpdated.videoId,
-                videoUrl: postUpdated.videoUrl,
-            });
             return res.json(postUpdated);
         } catch (error) {
             console.log(error);

@@ -35,6 +35,7 @@ export const getCommentsByPostId = (
                     {
                         model: db.User,
                         attributes: ['id', 'userName', 'fullName', 'avatar'],
+                        ...formatQueryUser,
                         as: 'commenterData',
                         where: userQuery,
                     },
@@ -108,6 +109,7 @@ export const getReplyCommentsOfCommentPost = (
                     {
                         model: db.User,
                         attributes: ['id', 'userName', 'fullName', 'avatar'],
+                        ...formatQueryUser,
                         as: 'responderData',
                         where: userQuery,
                     },

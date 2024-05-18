@@ -5,7 +5,7 @@ import * as avatarServices from '../services/avatar';
 class UserController {
     async findUser(req, res) {
         try {
-            const users = await userServices.findUsers(req.query);
+            let users = await userServices.findUsers(req.query);
             return res.status(200).json({
                 err: 0,
                 mes: '',

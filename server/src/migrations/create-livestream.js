@@ -2,30 +2,40 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('TmpPosts', {
+        await queryInterface.createTable('Livestreams', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER,
             },
-
-            postId: {
+            streamer: {
                 allowNull: false,
                 type: Sequelize.INTEGER,
                 references: {
-                    model: 'Posts',
+                    model: 'Users',
                     key: 'id',
                 },
             },
-            videoUrl: {
+            status: {
                 allowNull: false,
-                type: Sequelize.STRING,
+                type: Sequelize.INTEGER,
+                defaultValue: 1,
             },
-            videoId: {
+            title: {
                 allowNull: false,
-                type: Sequelize.STRING,
-                defaultValue: '',
+                type: DataTypes.STRING,
+                defaultValue: 'New Livestream',
+            },
+            key: {
+                allowNull: false,
+                type: DataTypes.STRING,
+                defaultValue: 'New Livestream',
+            },
+            views: {
+                allowNull: false,
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
             },
             createdAt: {
                 allowNull: false,
@@ -40,6 +50,6 @@ module.exports = {
         });
     },
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('TmpPosts');
+        await queryInterface.dropTable('Livestreams');
     },
 };

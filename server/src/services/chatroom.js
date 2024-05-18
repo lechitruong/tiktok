@@ -2,6 +2,7 @@ import { Op } from 'sequelize';
 import db from '../models';
 import { pagingConfig } from '../utils/pagination';
 import { query } from 'express';
+import { formatQueryUser } from './user';
 export const getUsersInChatroom = (
     chatroomId,
     { page, pageSize, orderBy, orderDirection, userName, fullName }
@@ -26,6 +27,7 @@ export const getUsersInChatroom = (
                     {
                         model: db.User,
                         attributes: ['id', 'userName', 'fullName', 'avatar'],
+                        ...formatQueryUser,
                         where: query,
                     },
                 ],

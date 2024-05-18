@@ -57,14 +57,7 @@ module.exports = {
                 allowNull: true,
                 type: Sequelize.STRING,
             },
-            shares: {
-                allowNull: false,
-                type: Sequelize.INTEGER,
-                references: {
-                    model: 'Users',
-                    key: 'id',
-                },
-            },
+
             createdAt: {
                 allowNull: false,
                 type: 'TIMESTAMP',
