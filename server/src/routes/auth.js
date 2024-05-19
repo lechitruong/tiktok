@@ -13,6 +13,7 @@ router.get(
 );
 router.get('/google/callback', Auth.authGoogle, AuthController.OAuth2);
 router.get('/facebook', passport.authenticate('facebook'));
+router.get('/login/success', AuthController.loginSuccess);
 router.get('/facebook/callback', Auth.authFacebook, AuthController.OAuth2);
 router.get(
     '/github',

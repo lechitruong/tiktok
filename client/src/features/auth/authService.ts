@@ -49,7 +49,16 @@ const AuthService = {
                 reject(error);
             }
         })
-        
+    },
+    async loginSuccess() {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const resp = await axiosNoToken.get(routePath + '/login/success')
+                resolve(resp.data)
+            } catch (error) {
+                reject(error);
+            }
+        })
     }
 };
 

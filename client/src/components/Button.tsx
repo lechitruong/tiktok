@@ -39,6 +39,8 @@ const Button : React.FC<ButtonProps> = ({
             font-bold
             w-full   
             text-[16px]
+            hover:cursor-pointer
+            hover:bg-[#f42750]
         `,
         disabled && 'opacity-70 cursor-default',
         fullWitdth && 'w-full',

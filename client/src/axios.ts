@@ -1,11 +1,9 @@
 import axios from 'axios';
-const baseURL: string = 'http://localhost:8000/api/v1/';
+export const baseURL: string = 'http://localhost:8000/api/v1/';
 import {jwtDecode} from 'jwt-decode'
-import { useDispatch, useSelector } from 'react-redux';
-import { accessTokenSelector } from './redux/selector';
+import { useDispatch } from 'react-redux';
 import { AppDispatch } from './redux/store';
-import { updateAccessToken } from './features/auth/authSlice';
-const accessToken = useSelector(accessTokenSelector)
+
 export const axiosNoToken = axios.create({
     baseURL,
     withCredentials: true
@@ -13,20 +11,21 @@ export const axiosNoToken = axios.create({
 export const axiosToken = axios.create({
     baseURL,
     headers: {
-        authorization: 'Bearer ' + (accessToken || ''),
+        authorization: 'Bearer ' + (localStorage.getItem("accessToken") || ''),
     },
     withCredentials: true
 })
-axiosToken.interceptors.request.use(
+  axiosToken.interceptors.request.use(
     async (config) => {
+        const accessToken= (localStorage.getItem("accessToken") || '');
         const date = new Date();
         if (accessToken) {
             const dispatch = useDispatch<AppDispatch>();
             const decodedToken = jwtDecode(accessToken)
             if (decodedToken.exp! < date.getTime()/1000) {
                try {
-                const resp : {accessToken : string} = await  axiosNoToken.post("/auth/token/refresh")
-                dispatch(updateAccessToken(resp.accessToken))
+                const resp : {accessToken : string} = await axiosNoToken.post("/auth/token/refresh")
+                localStorage.setItem("accessToken", resp.accessToken)
                } catch (error) {
                 console.error(error)
                }

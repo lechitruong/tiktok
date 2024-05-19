@@ -31,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
             association: DataTypes.STRING,
             avatarPublicId: DataTypes.STRING,
             isVertified: DataTypes.BOOLEAN,
+            peerId: DataTypes.STRING,
         },
         {
             sequelize,

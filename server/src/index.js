@@ -17,12 +17,17 @@ global._basedir = __dirname;
 const { Server } = require('socket.io');
 const handleSocket = require('./socket');
 getConnection();
-app.use(cors());
+app.use(
+    cors({
+        origin: 'http://localhost:5173',
+        credentials: true,
+    })
+);
+
 app.use(express.json());
 app.use(
     express.urlencoded({
         extended: true,
-        credentials: true,
     })
 );
 

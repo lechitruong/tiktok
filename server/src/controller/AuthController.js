@@ -51,6 +51,60 @@ class AuthController {
             )
         );
     };
+    refreshNewToken = async (req, res) => {
+        try {
+            const refreshToken = req.cookies.refreshToken;
+            if (!refreshToken) {
+                return forBidden("You're not authenticated", res);
+            }
+            try {
+                const userId = await jwt.verify(
+                    refreshToken.replace('Bearer ', ''),
+                    fs.readFileSync(
+                        path.join(__dirname, '..', 'key', 'publickey.crt')
+                    ),
+                    { algorithms: ['RS256'] }
+                ).id;
+                const user = await userServices.findOne({ id: userId });
+                user.password = '';
+                const storedToken = await client.get(String(user.id));
+                if (storedToken == null || storedToken != refreshToken) {
+                    return unauthorized('Refresh token is not valid', res);
+                }
+
+                const newAccessToken = new AuthController().generateAccessToken(
+                    user
+                );
+                const newRefreshToken =
+                    new AuthController().generateRefreshToken(user);
+
+                await new AuthController().removeRefreshTokenFromRedis(user.id);
+                await new AuthController().setRefreshTokenToRedis(
+                    newRefreshToken,
+                    user.id
+                );
+
+                res.cookie('refreshToken', newRefreshToken, {
+                    httpOnly: true,
+                    secure: false,
+                    path: '/',
+                });
+
+                return res.status(200).json({
+                    err: 0,
+                    mes: 'Successfully',
+                    accessToken: newAccessToken,
+                    user: user,
+                });
+            } catch (err) {
+                console.error(err);
+                return forBidden('Refresh token is not valid', res);
+            }
+        } catch (err) {
+            console.error(err);
+            return internalServerError(res);
+        }
+    };
     setRefreshTokenToRedis = (token, userId) => {
         return new Promise(async (resolve, reject) => {
             await client.set(
@@ -129,31 +183,6 @@ class AuthController {
             return internalServerError(res);
         }
     }
-
-    async OAuth2(req, res) {
-        try {
-            const user = req.user;
-            const accessToken = new AuthController().generateAccessToken(user);
-            const refreshToken = new AuthController().generateRefreshToken(
-                user
-            );
-            await new AuthController().setRefreshTokenToRedis(
-                refreshToken,
-                user.id
-            );
-            res.cookie('refreshToken', refreshToken, {
-                httpOnly: true,
-                secure: false,
-                path: '/',
-            });
-            res.redirect(
-                process.env.URL_CLIENT +
-                    `/login-success/${user.id}?accessToken=${accessToken}`
-            );
-        } catch (error) {
-            return internalServerError(res);
-        }
-    }
     async vertifyAccount(req, res) {
         try {
             const { email, otp } = req.body;
@@ -181,6 +210,33 @@ class AuthController {
             console.log(error);
             return internalServerError(res);
         }
+    }
+    async OAuth2(req, res) {
+        try {
+            const user = req.user;
+            const refreshToken = new AuthController().generateRefreshToken(
+                user
+            );
+            await new AuthController().setRefreshTokenToRedis(
+                refreshToken,
+                user.id
+            );
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                secure: false,
+                path: '/',
+            });
+            return res.redirect(
+                process.env.URL_CLIENT + `/login?action=loginSuccess`
+            );
+        } catch (error) {
+            return res.redirect(
+                process.env.URL_CLIENT + `/login?action=loginSuccess`
+            );
+        }
+    }
+    async loginSuccess(req, res) {
+        new AuthController().refreshNewToken(req, res);
     }
     async login(req, res) {
         try {
@@ -225,62 +281,14 @@ class AuthController {
         const user = req.user;
         await new AuthController().removeRefreshTokenFromRedis(user.id);
         res.clearCookie('refreshToken');
+        req.user = null;
+        return res.status(200).json({
+            err: 0,
+            mes: 'Logout successful',
+        });
     }
     async refreshToken(req, res) {
-        try {
-            const refreshToken = req.cookies.refreshToken;
-            if (!refreshToken) {
-                return forBidden("You're not authenticated", res);
-            }
-            let userId;
-            try {
-                const decoded = jwt.decode(refreshToken);
-                userId = decoded.id;
-            } catch (err) {
-                return unauthorized('Invalid token', res);
-            }
-
-            const storedToken = await new Promise((resolve, reject) => {
-                client.get(userId, (err, reply) => {
-                    if (err) {
-                        return reject(err);
-                    }
-                    resolve(reply);
-                });
-            });
-
-            if (storedToken !== refreshToken) {
-                return unauthorized('Refresh token is not valid', res);
-            }
-
-            jwt.verify(
-                refreshToken,
-                fs.readFileSync(
-                    path.join(__dirname, '..', 'key', 'publickey.crt')
-                ),
-                { algorithms: ['RS256'] },
-                async (err, user) => {
-                    if (err) {
-                        return forBidden('Token is not valid', res);
-                    }
-                    const newAccessToken = this.generateAccessToken(user);
-                    const newRefreshToken = this.generateRefreshToken(user);
-                    await this.removeRefreshTokenFromRedis(user.id);
-                    await this.setRefreshTokenToRedis(newRefreshToken, user.id);
-                    res.cookie('refreshToken', newRefreshToken, {
-                        httpOnly: true,
-                        secure: false,
-                        path: '/',
-                    });
-                    return res.status(200).json({
-                        accessToken: newAccessToken,
-                    });
-                }
-            );
-        } catch (err) {
-            console.error(err);
-            return internalServerError(res);
-        }
+        new AuthController().refreshNewToken(req, res);
     }
 }
 export default new AuthController();

@@ -4,10 +4,11 @@ interface ButtonAuthProps {
     className? : string
     onClick? : () => void,
     icon : React.ReactNode,
+    href? : string
 }
-const ButtonAuth : React.FC<ButtonAuthProps> = ({text, className,onClick,icon}) => {
+const ButtonAuth : React.FC<ButtonAuthProps> = ({text, className,onClick,icon,href}) => {
   return (
-    <div onClick={onClick} className={'flex  border-gray-300 border-solid border px-4 py-3 rounded-md my-4 '+className}>
+    <div onClick={href ? ()=>{window.location.href=href}  : onClick} className={'flex  border-gray-300 border-solid border px-4 py-3 rounded-md my-4 hover:cursor-pointer hover:opacity-90 '+className}>
         <div className='w-fit my-auto p-1'>
             {icon}
         </div>

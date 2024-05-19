@@ -6,10 +6,11 @@ var GoogleStrategy = require('passport-google-oauth20').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 var GitHubStrategy = require('passport-github2').Strategy;
 async function registerUserWithOAuth(email, profile) {
-    const fullName = profile.displayName;
     const userName = profile.provider + profile.id;
+    const fullName = profile.displayName || userName;
     const password = process.env.DEFAULT_PASSWORD;
     const association = profile.provider;
+    console.log(profile);
     const resp = await authServices.register(
         email,
         fullName,

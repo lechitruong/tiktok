@@ -31,6 +31,21 @@ class UserController {
             return internalServerError(res);
         }
     }
+    async updatePeerId(req, res) {
+        try {
+            const { peerId } = req.body;
+            const resp = await userServices.updateUser({ peerId }, req.user.id);
+            if (resp)
+                userServices.findOne({ id: userId }).then((userData) => {
+                    return res.status(200).json({
+                        err: 0,
+                        mes: 'Uploaded avatar of user ' + userId,
+                        user: userData,
+                    });
+                });
+            else return badRequest('Cannot update peer id', res);
+        } catch (error) {}
+    }
     async updateAvatar(req, res) {
         try {
             const avatarImage = req.file.buffer;

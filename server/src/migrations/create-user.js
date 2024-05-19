@@ -38,6 +38,10 @@ module.exports = {
                 type: Sequelize.BOOLEAN,
                 defaultValue: false,
             },
+            peerId: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+            },
             roleCode: {
                 type: Sequelize.STRING,
                 defaultValue: 'R3',
