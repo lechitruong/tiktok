@@ -1,5 +1,6 @@
 import axios from 'axios';
 export const baseURL: string = 'http://localhost:8000/api/v1/';
+export const clientURL : string = 'http://localhost:5173/'
 import {jwtDecode} from 'jwt-decode'
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from './redux/store';
@@ -11,16 +12,15 @@ export const axiosNoToken = axios.create({
 export const axiosToken = axios.create({
     baseURL,
     headers: {
-        authorization: 'Bearer ' + (localStorage.getItem("accessToken") || ''),
+        token: (localStorage.getItem("accessToken") || ''),
     },
     withCredentials: true
 })
-  axiosToken.interceptors.request.use(
+axiosToken.interceptors.request.use(
     async (config) => {
         const accessToken= (localStorage.getItem("accessToken") || '');
         const date = new Date();
         if (accessToken) {
-            const dispatch = useDispatch<AppDispatch>();
             const decodedToken = jwtDecode(accessToken)
             if (decodedToken.exp! < date.getTime()/1000) {
                try {

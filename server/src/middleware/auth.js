@@ -38,7 +38,28 @@ class Auth {
             }
         })(req, res, next);
     }
-
+    setUser(req, res, next) {
+        const token = req.headers.token;
+        if (!token) {
+            next();
+        } else {
+            const accessToken = token.split(' ')[1];
+            jwt.verify(
+                accessToken,
+                fs.readFileSync(
+                    path.join(__dirname, '..', 'key', 'publickey.crt')
+                ),
+                { algorithm: 'RS256' },
+                (err, user) => {
+                    if (err) {
+                        return forBidden('Token is not valid', res);
+                    }
+                    req.user = user;
+                    next();
+                }
+            );
+        }
+    }
     origin(req, res, next) {
         const token = req.headers.token;
         if (!token) {

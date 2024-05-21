@@ -3,24 +3,59 @@ import UploadFile from '../utils/uploadFile';
 const path = require('path');
 import * as postServices from '../services/post';
 import { uuidv4 } from 'uuid';
+import * as likePostService from '../services/likePost';
 class PostController {
     async likePost(req, res) {
         try {
-            return res.status(200).json({
-                err: 0,
-                mes: '',
-            });
+            const { postId } = req.params;
+            const likeData = { liker: req.user.id, postId };
+            const isLiked = await likePostService.isLikedPost(likeData);
+            if (isLiked) {
+                return badRequest('You are already liked by this post', res);
+            }
+            const likePost = await likePostService.likePost(likeData);
+            if (likePost) {
+                return res.status(200).json({
+                    err: 0,
+                    mes: 'Like post successfully',
+                });
+            }
+            return badRequest('Unknow error', res);
         } catch (error) {
+            console.log(error);
             return internalServerError(res);
         }
     }
     async unlikePost(req, res) {
         try {
+            const { postId } = req.params;
+            const likeData = { liker: req.user.id, postId };
+            const isLiked = await likePostService.isLikedPost(likeData);
+            if (!isLiked) {
+                return badRequest("You haven't liked this post yet.", res);
+            }
+            const resp = await likePostService.unlikePost(likeData);
             return res.status(200).json({
                 err: 0,
-                mes: '',
+                mes: 'Unlike post successfully',
             });
         } catch (error) {
+            return internalServerError(res);
+        }
+    }
+    async sharePost(req, res) {
+        try {
+            const { postId } = req.params;
+            const resp = await postServices.sharePost(postId);
+            if (resp) {
+                return res.status(200).json({
+                    err: 0,
+                    mes: 'Share post successfully',
+                });
+            }
+            return badRequest('Unknow error', res);
+        } catch (error) {
+            console.log(error);
             return internalServerError(res);
         }
     }
@@ -29,7 +64,8 @@ class PostController {
         try {
             const postList = await postServices.getPosts(
                 req.params.postId,
-                req.query
+                req.query,
+                req
             );
             if (postList.posts[0])
                 return res.status(200).json({
@@ -48,7 +84,8 @@ class PostController {
             if (req.params.userId) req.query.userId = req.params.userId;
             const posts = await postServices.getPosts(
                 req.params.postId,
-                req.query
+                req.query,
+                req
             );
             return res.status(200).json({
                 err: 0,
@@ -60,6 +97,7 @@ class PostController {
             return internalServerError(res);
         }
     }
+
     async upload(req, res) {
         try {
             const { files } = req;

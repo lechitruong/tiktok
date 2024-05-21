@@ -16,11 +16,26 @@ class UserController {
             return internalServerError(res);
         }
     }
+    async me(req, res) {
+        try {
+            const user = await userServices.findOne({ id: req.user.id });
+            if (!user) return notFound('User not found', res);
+            user.password = '';
+            return res.status(200).json({
+                err: 0,
+                mes: 'Found user',
+                user,
+            });
+        } catch (error) {
+            console.log(error);
+            return internalServerError(res);
+        }
+    }
     async getUser(req, res) {
         try {
             const user = await userServices.findOne({ id: req.params.userId });
             if (!user) return notFound('User not found', res);
-            const { password, ...other } = user.dataValues;
+            const { password, ...other } = user;
             return res.status(200).json({
                 err: 0,
                 mes: 'Found user',

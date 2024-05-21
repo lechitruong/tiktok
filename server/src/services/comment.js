@@ -47,22 +47,20 @@ export const getCommentsByPostId = (
                     },
                 ],
             };
-            const commentsPost = await db.CommentPost.findAll({
+            const { count, rows } = await db.CommentPost.findAndCountAll({
                 attributes: {
                     exclude: ['createdAt', 'updatedAt'],
                 },
                 ...commonQuery,
                 ...pagingQuery,
             });
-            const totalItems = await await db.CommentPost.count({
-                ...commonQuery,
-            });
+            const totalItems = count;
             const totalPages =
                 totalItems / pageSize >= 1
                     ? Math.ceil(totalItems / pageSize)
                     : 1;
             resolve({
-                commentsPost,
+                commentsPost: rows,
                 pagination: {
                     orderBy: queries.orderBy,
                     page: queries.offset + 1,
@@ -121,22 +119,20 @@ export const getReplyCommentsOfCommentPost = (
                     },
                 ],
             };
-            const commentsReply = await db.CommentReply.findAll({
+            const { count, rows } = await db.CommentReply.findAndCountAll({
                 attributes: {
                     exclude: ['createdAt', 'updatedAt'],
                 },
                 ...commonQuery,
                 ...pagingQuery,
             });
-            const totalItems = await await db.CommentReply.count({
-                ...commonQuery,
-            });
+            const totalItems = count;
             const totalPages =
                 totalItems / pageSize >= 1
                     ? Math.ceil(totalItems / pageSize)
                     : 1;
             resolve({
-                commentsReply,
+                commentsReply: rows,
                 pagination: {
                     orderBy: queries.orderBy,
                     page: queries.offset + 1,

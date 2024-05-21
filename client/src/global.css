@@ -1,6 +1,41 @@
+
 .text-color-75 {
     color : #161823b5;
 }
 a, p,.text-color {
     color : #161823;
 }
+.text-primary {
+    color : #f42750 !important;
+}
+#searchInputHeader:focus ~ #searchPopupHeader , #searchInputHeader:hover ~ #lineHiddenSearchInputHeader {
+    display: block !important;
+}
+#lineHiddenSearchInputHeader:hover ~ #searchPopupHeader {
+    display: block !important;
+}
+#searchPopupHeader:hover {
+    display: block !important;
+}
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: rgba(0,0,0,0.1);
+  }
+
+::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    background: rgba(0,0,0,0.2);
+  }
+
+::-webkit-scrollbar-thumb:hover{
+  	background: rgba(0,0,0,0.4);
+  }
+
+::-webkit-scrollbar-thumb:active{
+  	background: rgba(0,0,0,.9);
+  }

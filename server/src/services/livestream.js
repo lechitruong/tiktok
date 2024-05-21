@@ -37,18 +37,20 @@ export const getLivestreams = (
                     },
                 ];
             const getLivestreamQuery = Object.assign(query, queries);
-            const livestreams = await db.Livestream.findAll(getLivestreamQuery);
-            const totalItems = await db.Livestream.count(query);
+            const { count, rows } = await db.Livestream.findAndCountAll(
+                getLivestreamQuery
+            );
+            const totalItems = count;
             const totalPages =
                 totalItems / pageSize >= 1
                     ? Math.ceil(totalItems / pageSize)
                     : 1;
             resolve({
-                livestreams,
+                livestreams: rows,
                 pagination: {
                     orderBy: queries.orderBy,
                     page: queries.offset + 1,
-                    pageSize: livestreams.length,
+                    pageSize: queries.limit,
                     orderDirection: queries.orderDirection,
                     totalItems,
                     totalPages,

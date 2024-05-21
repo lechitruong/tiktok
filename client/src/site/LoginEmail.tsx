@@ -9,11 +9,13 @@ import { login } from '@features/auth/authSlice';
 import { LoginParams } from '@features/auth/authService';
 import { authSelector } from '@/redux/selector';
 import { AppDispatch } from '@/redux/store';
+import { useNavigate } from 'react-router-dom';
 const loginSchema = yup.object({
     emailOrUsername: yup.string().required('Email or username is required'),
     password: yup.string().required('Password is required'),
 });
 const LoginEmail = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const authState = useSelector(authSelector);
     const initialValues : LoginParams = {
@@ -28,6 +30,11 @@ const LoginEmail = () => {
             dispatch(login(values));
         },
     });
+    useEffect(() => {
+        if (authState.isSuccess) {
+            navigate('/');
+        }
+      }, [authState.isSuccess, navigate]);
     return (
         <div className='flex-1 w-full justify-center flex overflow-y-scroll px-3'>
             <div className=" flex  mt-10 md:mt-16 min-w-[330px] max-w-[390px]">
@@ -73,7 +80,7 @@ const LoginEmail = () => {
                                 {!authState.isLoading &&  'Log in'}
                             </Button>
                             <div className='mt-8 mx-auto w-fit'>
-                                <a onClick={()=>{window.location.href = "/login";}} className="flex gap-2 hover:cursor-pointer hover:opacity-80">
+                                <a onClick={()=>{navigate(-1)}} className="flex gap-2 hover:cursor-pointer hover:opacity-80">
                                     <LeftOutlined/>
                                     <p className='text-black text-[14px] font-semibold'>Go back</p>
                                 </a>

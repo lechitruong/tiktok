@@ -13,22 +13,20 @@ export const getNotifications = (
                 orderBy,
                 orderDirection
             );
-            const users = await db.Notification.findAll({
+            const { count, rows } = await db.Notification.findAndCountAll({
                 where: { userId },
                 attributes: {
                     exclude: ['userId', 'updatedAt'],
                 },
                 ...queries,
             });
-            const totalItems = await db.Notification.count({
-                where: { userId },
-            });
+            const totalItems = count;
             const totalPages =
                 totalItems / pageSize >= 1
                     ? Math.ceil(totalItems / pageSize)
                     : 1;
             resolve({
-                users,
+                users: rows,
                 pagination: {
                     orderBy: queries.orderBy,
                     page: queries.offset + 1,

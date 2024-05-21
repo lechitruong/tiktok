@@ -1,5 +1,13 @@
 export interface AbstractModel {
-    id : number | null | undefined;
-    createAt : Date | null;
-    updateAt : Date | null;
+    id : number | null | undefined
+    createAt : Date | null
+    updateAt : Date | null
+}
+export interface PaginationModel {
+    orderBy : string
+    page : number
+    pageSize : number
+    orderDirection : string
+    totalItems : number
+    totalPages : number
 }

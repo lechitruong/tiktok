@@ -16,7 +16,7 @@ export const getListFollowing = (
             const query = {};
             if (userName) query.userName = { [Op.substring]: userName };
             if (fullName) query.fullName = { [Op.substring]: fullName };
-            const followings = await db.Follower.findAll({
+            const { count, rows } = await db.Follower.findAndCountAll({
                 where: {
                     followee: userId,
                 },
@@ -46,17 +46,13 @@ export const getListFollowing = (
                     },
                 ],
             });
-            const totalItems = await db.Follower.count({
-                where: {
-                    followee: userId,
-                },
-            });
+            const totalItems = count;
             const totalPages =
                 totalItems / pageSize >= 1
                     ? Math.ceil(totalItems / pageSize)
                     : 1;
             resolve({
-                followings,
+                followings: rows,
                 pagination: {
                     orderBy: queries.orderBy,
                     page: queries.offset + 1,
@@ -85,7 +81,7 @@ export const getListFollower = (
             const query = {};
             if (userName) query.userName = { [Op.substring]: userName };
             if (fullName) query.fullName = { [Op.substring]: fullName };
-            const followers = await db.Follower.findAll({
+            const { count, rows } = await db.Follower.findAndCountAll({
                 where: {
                     follower: userId,
                 },
@@ -123,17 +119,13 @@ export const getListFollower = (
                     },
                 ],
             });
-            const totalItems = await db.Follower.count({
-                where: {
-                    follower: userId,
-                },
-            });
+            const totalItems = count;
             const totalPages =
                 totalItems / pageSize >= 1
                     ? Math.ceil(totalItems / pageSize)
                     : 1;
             resolve({
-                followers,
+                followers: rows,
                 pagination: {
                     orderBy: queries.orderBy,
                     page: queries.offset + 1,

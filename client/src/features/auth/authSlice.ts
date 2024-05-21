@@ -3,6 +3,7 @@ import AuthService, { LoginParams, RegisterParams, VertifyParams } from "./authS
 import { UserModel } from "@/models/user";
 import { Bounce, toast } from "react-toastify";
 import showToast from "@/utils/toast";
+import { useNavigate } from "react-router-dom";
 export const register = createAsyncThunk(
     'auth/register',
     async ( user : RegisterParams,thunkAPI) => {
@@ -73,7 +74,9 @@ const authSlice = createSlice({
     name : 'auth',
     initialState,
     reducers : {
-        
+        setCurrentUser(state,action) {
+            state.user = action.payload;
+        }
     },
     extraReducers : (builder) => {
         builder
@@ -100,9 +103,8 @@ const authSlice = createSlice({
                 state.isError = false;
                 state.isSuccess = true;
                 const payload = action.payload as AuthPayload
+                localStorage.setItem("accessToken", payload.accessToken)
                 state.user = payload.user
-                showToast.success(payload.mes)
-                
             })
             .addCase(login.rejected,(state:InitStateAuthType,action)=> {
                 state.isLoading = false;
@@ -125,9 +127,8 @@ const authSlice = createSlice({
                 state.isError = false;
                 state.isSuccess = true;
                 const payload = action.payload as AuthPayload
+                localStorage.setItem("accessToken", payload.accessToken)
                 state.user = payload.user
-                showToast.success(payload.mes)
-                
             })
             .addCase(loginSuccess.rejected,(state:InitStateAuthType,action)=> {
                 state.isLoading = false;
@@ -157,7 +158,7 @@ const authSlice = createSlice({
             })
     },
 })
-// export const {
-//     updateAccessToken
-// } = authSlice.actions
+export const {
+    setCurrentUser
+} = authSlice.actions
 export default authSlice.reducer;

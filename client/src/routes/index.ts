@@ -11,7 +11,7 @@ export interface RouteType {
 }
 
 export const publicRoutes = [
-    { path: "/home", element: Home, layout : DefaultLayout },
+    { path: "/", element: Home, layout : DefaultLayout },
     { path: "/login", element: Login, layout : LoginWithPolicyLayout },
     { path: "/login-email", element: LoginEmail, layout : LoginLayout },
 ];

@@ -17,7 +17,7 @@ export const getListMessageOfChatroom = async (
             const query = {};
             if (content) query.content = { [Op.substring]: content };
             if (chatroomId) query.chatroomId = chatroomId;
-            const messages = await db.Message.findAll({
+            const { count, rows } = await db.Message.findAndCountAll({
                 where: query,
                 attributes: {
                     exclude: ['sender'],
@@ -32,15 +32,13 @@ export const getListMessageOfChatroom = async (
                 ],
                 ...queries,
             });
-            const totalItems = await db.Message.count({
-                where: query,
-            });
+            const totalItems = count;
             const totalPages =
                 totalItems / pageSize >= 1
                     ? Math.ceil(totalItems / pageSize)
                     : 1;
             resolve({
-                messages,
+                messages: rows,
                 pagination: {
                     orderBy: queries.orderBy,
                     page: queries.offset + 1,

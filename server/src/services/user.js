@@ -25,11 +25,6 @@ export const formatQueryUser = {
             as: 'avatarData',
             attributes: { exclude: ['createdAt', 'updatedAt'] },
         },
-        {
-            model: db.Role,
-            as: 'roleData',
-            attributes: ['id', 'code', 'value'],
-        },
     ],
 };
 export const findUsers = ({
@@ -51,21 +46,19 @@ export const findUsers = ({
             const query = {};
             if (userName) query.userName = { [Op.substring]: userName };
             if (fullName) query.fullName = { [Op.substring]: fullName };
-            const users = await db.User.findAll({
+            const { count, rows } = await db.User.findAndCountAll({
                 where: query,
                 attributes: ['id', 'userName', 'fullName'],
                 ...formatQueryUser,
                 ...queries,
             });
-            const totalItems = await db.User.count({
-                where: query,
-            });
+            const totalItems = count;
             const totalPages =
                 totalItems / pageSize >= 1
                     ? Math.ceil(totalItems / pageSize)
                     : 1;
             resolve({
-                users,
+                users: rows,
                 pagination: {
                     orderBy: queries.orderBy,
                     page: queries.offset + 1,

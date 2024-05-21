@@ -18,7 +18,7 @@ export const getUsersInChatroom = (
             const query = {};
             if (userName) query.userName = { [Op.substring]: userName };
             if (fullName) query.fullName = { [Op.substring]: fullName };
-            const usersNotRaw = await db.UserInChatroom.findAll({
+            const { count, rows } = await db.UserInChatroom.findAndCountAll({
                 attributes: [],
                 where: {
                     chatroomId,
@@ -33,18 +33,13 @@ export const getUsersInChatroom = (
                 ],
                 ...queries,
             });
-            const users = usersNotRaw.map(
-                (userInChatroom) => userInChatroom['User']
-            );
-            const totalItems = await await db.UserInChatroom.count({
-                where: {
-                    chatroomId,
-                },
-            });
+            const users = rows.map((userInChatroom) => userInChatroom['User']);
+            const totalItems = count;
             const totalPages =
                 totalItems / pageSize >= 1
                     ? Math.ceil(totalItems / pageSize)
                     : 1;
+
             resolve({
                 users,
                 pagination: {
@@ -74,7 +69,7 @@ export const getChatroomsOfUser = (
             );
             const query = {};
             if (name) query.name = { [Op.substring]: name };
-            const chatroomsNotRaw = await db.UserInChatroom.findAll({
+            const { count, rows } = await db.UserInChatroom.findAndCountAll({
                 attributes: [],
                 where: {
                     member,
@@ -88,14 +83,10 @@ export const getChatroomsOfUser = (
 
                 ...queries,
             });
-            const chatrooms = chatroomsNotRaw.map(
+            const chatrooms = rows.map(
                 (userInChatroom) => userInChatroom['Chatroom']
             );
-            const totalItems = await await db.UserInChatroom.count({
-                where: {
-                    member,
-                },
-            });
+            const totalItems = count;
 
             const totalPages =
                 totalItems / pageSize >= 1

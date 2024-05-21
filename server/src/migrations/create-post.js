@@ -9,11 +9,6 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER,
             },
-            likes: {
-                allowNull: false,
-                type: Sequelize.INTEGER,
-                defaultValue: 0,
-            },
             views: {
                 allowNull: false,
                 type: Sequelize.INTEGER,

@@ -1,10 +1,12 @@
-import { Op, where } from 'sequelize';
-import db from '../models';
+import { Op, col, fn, literal, where } from 'sequelize';
+import db, { Sequelize } from '../models';
 import { pagingConfig } from '../utils/pagination';
 import { formatQueryUser } from './user';
+import post from '../models/post';
 export const getPosts = (
     postId,
-    { page, pageSize, orderBy, orderDirection, userId, title }
+    { page, pageSize, orderBy, orderDirection, userId, title },
+    req
 ) =>
     new Promise(async (resolve, reject) => {
         try {
@@ -18,38 +20,114 @@ export const getPosts = (
             if (postId || title) query.where = {};
             if (postId) query.where.id = postId;
             if (title) query.where.title = { [Op.substring]: title };
+            query.include = [];
             if (userId)
-                query.include = [
-                    {
-                        model: db.User,
-                        attributes: ['id', 'userName', 'fullName'],
-                        as: 'posterData',
-                        where: { id: userId },
-                        ...formatQueryUser,
-                    },
-                ];
+                query.include.push({
+                    model: db.User,
+                    attributes: ['id', 'userName', 'fullName'],
+                    as: 'posterData',
+                    where: { id: userId },
+                    ...formatQueryUser,
+                });
             else
-                query.include = [
-                    {
-                        model: db.User,
-                        attributes: ['id', 'userName', 'fullName'],
-                        as: 'posterData',
-                        ...formatQueryUser,
-                    },
-                ];
+                query.include.push({
+                    model: db.User,
+                    attributes: ['id', 'userName', 'fullName'],
+                    as: 'posterData',
+                    ...formatQueryUser,
+                });
+            query.attributes = {
+                include: [
+                    [
+                        literal(`(
+                                  SELECT COUNT(*)
+                                  FROM likesPost
+                                  WHERE
+                                    likesPost.postId = post.id
+                                    
+                              )`),
+                        'likes',
+                    ],
+                ],
+            };
+            if (req.user) {
+                query.attributes.include.push([
+                    literal(`(
+                        SELECT EXISTS (
+                            SELECT 1
+                            FROM followers f
+                            JOIN posts p ON p.poster = f.followee
+                            JOIN users u ON u.id = f.followee
+                            WHERE 
+                                f.follower = ${req.user.id} 
+                                AND p.poster = u.id 
+                                AND post.id = p.id 
+                                AND post.poster = p.poster
+                        )
+                        )`),
+                    'isFollow',
+                ]);
+                query.attributes.include.push([
+                    literal(`(
+                        SELECT EXISTS (
+                          SELECT 1
+                          FROM followers f
+                          JOIN posts p ON p.poster = f.followee
+                          JOIN users u ON u.id = f.followee
+                          WHERE f.follower = ${req.user.id}
+                            AND p.poster = u.id
+                            AND post.id = p.id
+                            AND post.poster = p.poster
+                        )
+                        AND EXISTS (
+                          SELECT 1
+                          FROM followers f
+                          JOIN posts p ON p.poster = f.follower
+                          JOIN users u ON u.id = f.follower
+                          WHERE f.followee = ${req.user.id}
+                            AND p.poster = u.id
+                            AND post.id = p.id
+                            AND post.poster = p.poster
+                        )
+                      )`),
+                    'isFriend',
+                ]);
+                query.attributes.include.push([
+                    literal(`(
+                        SELECT EXISTS (
+                            SELECT 1
+                            FROM likesPost lp,posts p
+                            WHERE lp.liker = ${req.user.id} AND p.poster = lp.liker AND p.id = lp.postId AND post.id = p.id
+                        )
+                        )`),
+                    'isLiked',
+                ]);
+                query.attributes.include.push([
+                    literal(`(
+                        SELECT EXISTS (
+                            SELECT 1
+                            FROM posts p
+                            WHERE p.poster = ${req.user.id} AND post.id = p.id
+                        )
+                        )`),
+                    'isMe',
+                ]);
+            }
             const getPostsQuery = Object.assign(query, queries);
-            const posts = await db.Post.findAll(getPostsQuery);
-            const totalItems = await db.Post.count(query);
+            const { count, rows } = await db.Post.findAndCountAll(
+                getPostsQuery
+            );
+            const totalItems = count;
             const totalPages =
                 totalItems / pageSize >= 1
                     ? Math.ceil(totalItems / pageSize)
                     : 1;
             resolve({
-                posts,
+                posts: rows,
                 pagination: {
                     orderBy: queries.orderBy,
                     page: queries.offset + 1,
-                    pageSize: posts.length,
+                    pageSize: queries.limit,
                     orderDirection: queries.orderDirection,
                     totalItems,
                     totalPages,
@@ -70,13 +148,7 @@ export const getOne = (id) =>
                         model: db.User,
                         attributes: ['id', 'userName', 'fullName'],
                         as: 'posterData',
-                        include: [
-                            {
-                                model: db.Avatar,
-                                attributes: ['url'],
-                                as: 'avatarData',
-                            },
-                        ],
+                        ...formatQueryUser,
                     },
                 ],
             });
@@ -129,6 +201,22 @@ export const updatePost = (id, postModel) =>
                     id,
                 },
             });
+            resolve(resp);
+        } catch (error) {
+            reject(error);
+        }
+    });
+export const sharePost = (id) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const resp = await db.Post.update(
+                { shares: Sequelize.literal('shares + 1') },
+                {
+                    where: {
+                        id,
+                    },
+                }
+            );
             resolve(resp);
         } catch (error) {
             reject(error);

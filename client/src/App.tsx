@@ -10,8 +10,30 @@ import {
 import { RouteType, publicRoutes } from './routes';
 import DefaultLayout from './components/Layout/DefaultLayout';
 import Page404 from './site/Page404';
+import { useDispatch, useSelector } from 'react-redux';
+import { currentUserSelector } from './redux/selector';
+import { useEffect } from 'react';
+import { AppDispatch } from './redux/store';
+import UserService, { UserPayload } from './features/user/userService';
+import { setCurrentUser } from './features/auth/authSlice';
+import { UserModel } from './models/user';
+import { axiosNoToken, axiosToken } from './axios';
+import { jwtDecode } from 'jwt-decode';
 function App() {
+  
   const token = localStorage.getItem("accessToken") || '';
+  const dispatch = useDispatch<AppDispatch>();
+  const user = useSelector(currentUserSelector);
+  useEffect(()=> {
+    const setMyInfo = async () => {
+      const resp :UserPayload = await UserService.me();
+      dispatch(setCurrentUser(resp.user))
+      
+    }
+    if (token && !user) {
+      setMyInfo();
+    }
+  })
   const RouteRender = (route :RouteType, index : number) => {
     const Layout = route.layout || DefaultLayout;
     const Page = route.element;
@@ -28,7 +50,7 @@ function App() {
     );
   };
   return (
-      <div>
+      <div className='h-dvh overflow-hidden'>
         <Router>
           <Routes>
             { 

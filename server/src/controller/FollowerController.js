@@ -32,16 +32,14 @@ class FollowController {
     async followUser(req, res) {
         try {
             const { userId } = req.params;
-            if (userId == req.user.id) return internalServerError(res);
+            if (userId == req.user.id)
+                return badRequest("Can't follow yourself", res);
             const follow = await followerServices.followUser(
                 req.user.id,
                 userId
             );
             if (!follow[1])
-                return res.status(200).json({
-                    err: 1,
-                    mes: "You're already following this user",
-                });
+                badRequest("You're already following this user", res);
             const isFriend = await followerServices.getFollower({
                 follower: userId,
                 followee: req.user.id,

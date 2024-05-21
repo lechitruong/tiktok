@@ -1,5 +1,6 @@
 import { badRequest, internalServerError } from '../utils/handleResp';
 import * as messageServices from '../services/message';
+import { v4 as uuidv4 } from 'uuid';
 class MessageController {
     async getMessagesOfChatroom(req, res) {
         try {
@@ -12,6 +13,47 @@ class MessageController {
                 err: 0,
                 mes: '',
                 ...resp,
+            });
+        } catch (error) {
+            console.log(error);
+            return internalServerError(res);
+        }
+    }
+    async uploadImage(req, res) {
+        try {
+            const { files } = req;
+            for (const file of files) {
+                if (file.size / (1024 * 1024) > 30)
+                    return badRequest(
+                        'Cannot upload file with size more than 30mb',
+                        res
+                    );
+            }
+            const images = files.filter((file) => file.fieldname == 'images');
+            if (!images.mimetype.includes('image'))
+                return badRequest('Field images must be image type', res);
+            const imagesLink = [];
+            for (const image of images) {
+                const uuid = uuidv4();
+                const partsImageName = image.originalname.split('.');
+                const imageName =
+                    partsImageName[0] +
+                    uuid +
+                    partsImageName[partsImageName.length - 1];
+                const imageUploaded = await UploadFile.uploadToGGDriver(
+                    image,
+                    imageName,
+                    process.env.GG_DRIVE_FOLDER_THUMNAIL_ID
+                );
+                imagesLink.push({
+                    id: imageUploaded.id,
+                    url: imageUploaded.url,
+                });
+            }
+            return res.status(200).json({
+                err: 0,
+                mes: 'Upload successfully',
+                images: imagesLink,
             });
         } catch (error) {
             console.log(error);

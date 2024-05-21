@@ -11,10 +11,12 @@ module.exports = (sequelize, DataTypes) => {
             // define association here
             LikePost.belongsTo(models.User, {
                 foreignKey: 'liker',
+                as: 'likerData',
                 targetKey: 'id',
             });
             LikePost.belongsTo(models.Post, {
                 foreignKey: 'postId',
+                as: 'postData',
                 targetKey: 'id',
             });
         }

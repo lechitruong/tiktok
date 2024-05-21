@@ -1,9 +1,19 @@
 import { Op } from 'sequelize';
 import db from '../models';
-export const getUsersInChatroom = (chatroomId) =>
+import { pagingConfig } from '../utils/pagination';
+export const getUsersInChatroom = (
+    chatroomId,
+    { page, pageSize, orderBy, orderDirection }
+) =>
     new Promise(async (resolve, reject) => {
         try {
-            const usersInChatroom = await db.UserInChatroom.findAll({
+            const queries = pagingConfig(
+                page,
+                pageSize,
+                orderBy,
+                orderDirection
+            );
+            const { count, rows } = await db.UserInChatroom.findAndCountAll({
                 where: {
                     chatroomId,
                 },
@@ -11,19 +21,15 @@ export const getUsersInChatroom = (chatroomId) =>
                 limit: pageSize,
                 offset: (page - 1) * pageSize,
             });
-            const totalItems = await db.UserInChatroom.count({
-                where: {
-                    chatroomId,
-                },
-            });
+            const totalItems = count;
             const totalPages = Math.ceil(totalItems / pageSize);
             resolve({
-                usersInChatroom,
+                usersInChatroom: rows,
                 pagination: {
-                    orderBy,
-                    page,
-                    pageSize,
-                    orderDirection,
+                    orderBy: queries.orderBy,
+                    page: queries.offset + 1,
+                    pageSize: queries.limit,
+                    orderDirection: queries.orderDirection,
                     totalItems,
                     totalPages,
                 },

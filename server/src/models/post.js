@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
                 targetKey: 'id',
                 as: 'posterData',
             });
+            Post.hasMany(models.LikePost, {
+                foreignKey: 'postId',
+                as: 'likePostData',
+            });
         }
     }
     Post.init(
@@ -21,7 +25,6 @@ module.exports = (sequelize, DataTypes) => {
             title: DataTypes.STRING,
             videoUrl: DataTypes.STRING,
             videoId: DataTypes.STRING,
-            likes: DataTypes.INTEGER,
             thumnailUrl: DataTypes.STRING,
             thumnailId: DataTypes.STRING,
             comments: DataTypes.INTEGER,
