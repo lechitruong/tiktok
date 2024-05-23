@@ -75,8 +75,8 @@ class UserController {
 
             if (user.avatarData.code != process.env.CODE_DEFAULT_AVATAR) {
                 await UploadFile.removeFromCloudinary(
-                    oldPublicId,
-                    process.env.IMAGE_TYPE_FILE
+                    process.env.IMAGE_TYPE_FILE,
+                    oldPublicId
                 );
             }
             const avatarUploaded = await UploadFile.uploadToCloudinary(

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 24, 2024 at 09:02 AM
+-- Generation Time: May 23, 2024 at 06:59 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -41,7 +41,9 @@ CREATE TABLE `avatars` (
 --
 
 INSERT INTO `avatars` (`id`, `publicId`, `url`, `code`, `createdAt`, `updatedAt`) VALUES
-(1, 'tiktok_avatar/qrabjbofeuu20wpg28o0', 'https://res.cloudinary.com/da5wewzih/image/upload/v1708242262/tiktok_avatar/qrabjbofeuu20wpg28o0.png', 'defaultAvatar', '2024-02-24 06:38:02', '2024-02-24 06:38:02');
+(1, 'tiktok_avatar/qrabjbofeuu20wpg28o0', 'https://res.cloudinary.com/da5wewzih/image/upload/v1708242262/tiktok_avatar/qrabjbofeuu20wpg28o0.png', 'defaultAvatar', '2024-02-24 06:38:02', '2024-02-24 06:38:02'),
+(2, 'tiktok_avatar/tfgnuwbhky8rbyg3pgzm', 'http://res.cloudinary.com/da5wewzih/image/upload/v1716358843/tiktok_avatar/tfgnuwbhky8rbyg3pgzm.jpg', 'avatarOfUser1', '2024-05-22 06:20:34', '2024-05-22 06:20:34'),
+(3, 'tiktok_avatar/tvfmylnammlzck3w3abg', 'http://res.cloudinary.com/da5wewzih/image/upload/v1716359349/tiktok_avatar/tvfmylnammlzck3w3abg.jpg', 'avatarOfUser4', '2024-05-22 06:24:01', '2024-05-22 06:29:00');
 
 -- --------------------------------------------------------
 
@@ -83,6 +85,13 @@ CREATE TABLE `chatrooms` (
   `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
   `updatedAt` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `chatrooms`
+--
+
+INSERT INTO `chatrooms` (`id`, `name`, `createdAt`, `updatedAt`) VALUES
+(4, '', '2024-05-22 06:53:20', '2024-05-22 06:53:20');
 
 -- --------------------------------------------------------
 
@@ -131,6 +140,14 @@ CREATE TABLE `followers` (
   `updatedAt` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `followers`
+--
+
+INSERT INTO `followers` (`id`, `follower`, `followee`, `createdAt`, `updatedAt`) VALUES
+(36, 1, 4, '2024-05-22 06:53:20', '2024-05-22 06:53:20'),
+(39, 4, 1, '2024-05-22 15:34:22', '2024-05-22 15:34:22');
+
 -- --------------------------------------------------------
 
 --
@@ -158,6 +175,16 @@ CREATE TABLE `likespost` (
   `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
   `updatedAt` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `likespost`
+--
+
+INSERT INTO `likespost` (`id`, `liker`, `postId`, `createdAt`, `updatedAt`) VALUES
+(4, 1, 11, '2024-05-21 16:04:15', '2024-05-21 16:04:15'),
+(7, 1, 8, '2024-05-21 16:56:10', '2024-05-21 16:56:10'),
+(8, 3, 11, '2024-05-21 17:02:57', '2024-05-21 17:02:57'),
+(10, 4, 11, '2024-05-22 06:50:15', '2024-05-22 06:50:15');
 
 -- --------------------------------------------------------
 
@@ -203,13 +230,6 @@ CREATE TABLE `otps` (
   `updatedAt` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `otps`
---
-
-INSERT INTO `otps` (`id`, `email`, `otp`, `createdAt`, `updatedAt`) VALUES
-(1, 'hoanghuydev@gmail.com', 'kw4zfm', '2024-02-24 06:39:20', '2024-02-24 06:39:20');
-
 -- --------------------------------------------------------
 
 --
@@ -218,16 +238,16 @@ INSERT INTO `otps` (`id`, `email`, `otp`, `createdAt`, `updatedAt`) VALUES
 
 CREATE TABLE `posts` (
   `id` int(11) NOT NULL,
-  `likes` int(11) NOT NULL DEFAULT 0,
   `views` int(11) NOT NULL DEFAULT 0,
   `comments` int(11) NOT NULL DEFAULT 0,
   `shares` int(11) NOT NULL,
   `poster` int(11) NOT NULL,
-  `title` varchar(255) NOT NULL,
+  `title` varchar(1000) NOT NULL,
   `thumnailUrl` varchar(255) DEFAULT NULL,
   `videoUrl` varchar(255) DEFAULT NULL,
   `thumnailId` varchar(255) DEFAULT NULL,
   `videoId` varchar(255) DEFAULT NULL,
+  `visibility` int(11) DEFAULT 1 COMMENT 'public is 1, friend is 0 and just me is -1',
   `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
   `updatedAt` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -236,8 +256,14 @@ CREATE TABLE `posts` (
 -- Dumping data for table `posts`
 --
 
-INSERT INTO `posts` (`id`, `likes`, `views`, `comments`, `shares`, `poster`, `title`, `thumnailUrl`, `videoUrl`, `thumnailId`, `videoId`, `createdAt`, `updatedAt`) VALUES
-(6, 0, 0, 0, 0, 1, 'How to marketing for Facebook', 'https://drive.google.com/uc?export=view&id=1f4Y6RdqdqAFWBI9t8hQKtWzuz3cLPnQV', 'http://res.cloudinary.com/da5wewzih/video/upload/v1708759993/tiktok_video/m0foyhbtwuknzhmjeetb.mp4', '1f4Y6RdqdqAFWBI9t8hQKtWzuz3cLPnQV', 'tiktok_video/m0foyhbtwuknzhmjeetb', '2024-02-24 07:33:04', '2024-02-24 07:33:18');
+INSERT INTO `posts` (`id`, `views`, `comments`, `shares`, `poster`, `title`, `thumnailUrl`, `videoUrl`, `thumnailId`, `videoId`, `visibility`, `createdAt`, `updatedAt`) VALUES
+(7, 0, 0, 0, 3, 'How to marketing for Facebook', 'https://drive.google.com/uc?export=view&id=1svKID1G6V2T7iRnnRasbq7wTnuqc30kj', 'http://res.cloudinary.com/da5wewzih/video/upload/v1709014619/tiktok_video/xzzgbdzlxuo51eu9qz9q.mp4', '1svKID1G6V2T7iRnnRasbq7wTnuqc30kj', 'tiktok_video/xzzgbdzlxuo51eu9qz9q', 1, '2024-02-27 06:16:42', '2024-02-27 06:17:20'),
+(8, 0, 0, 6, 1, 'Talking kittens cat', 'https://drive.usercontent.google.com/download?id=1dE-aHNOzHX5UXfF56UrHGMgWDlVJfunZ&export=view&authuser=1', 'http://res.cloudinary.com/da5wewzih/video/upload/v1716220712/tiktok_video/qkfwangsiwkmaszsem1v.mp4', '1dE-aHNOzHX5UXfF56UrHGMgWDlVJfunZ', 'tiktok_video/qkfwangsiwkmaszsem1v', 1, '2024-05-20 15:58:20', '2024-05-21 16:56:03'),
+(9, 0, 0, 0, 2, 'Cat: Don’t talk to me any more', 'https://drive.usercontent.google.com/download?id=16RRP_Cm2gXBctSwIQVIH_EDMsRGO_1lX&export=view&authuser=1', 'http://res.cloudinary.com/da5wewzih/video/upload/v1716220837/tiktok_video/gqsyudrlwcbxdlp68vd2.mp4', '16RRP_Cm2gXBctSwIQVIH_EDMsRGO_1lX', 'tiktok_video/gqsyudrlwcbxdlp68vd2', 1, '2024-05-20 16:00:26', '2024-05-20 16:00:36'),
+(10, 0, 0, 1, 1, 'I wanna love u', 'https://drive.usercontent.google.com/download?id=1wAewUcySxGtzMH-aLzj1sRqvzaoGjMv4&export=view&authuser=1', 'http://res.cloudinary.com/da5wewzih/video/upload/v1716220942/tiktok_video/qatbetefbw0bdzuvnl7o.mp4', '1wAewUcySxGtzMH-aLzj1sRqvzaoGjMv4', 'tiktok_video/qatbetefbw0bdzuvnl7o', 1, '2024-05-20 16:02:11', '2024-05-21 15:48:49'),
+(11, 0, 0, 2, 4, 'Một video dễ thương ghi lại khoảnh khắc bạn đang vuốt ve một chú mèo mập đáng yêu đang nằm thư giãn. Chú mèo mập, với bộ lông mềm mượt và ánh mắt lười biếng, tận hưởng từng giây phút được cưng nựng. Những cái vuốt ve nhẹ nhàng khiến chú mèo trông hạnh phúc và thoải mái, làm tan chảy trái tim bất cứ ai xem video này. ', 'https://drive.usercontent.google.com/download?id=1GjNmRcJ3rOHVAH5hzxT4_GekPyq4Go_Y&export=view&authuser=1', 'http://res.cloudinary.com/da5wewzih/video/upload/v1716226746/tiktok_video/ut2zoqvl9xfuwkzalw1l.mp4', '1GjNmRcJ3rOHVAH5hzxT4_GekPyq4Go_Y', 'tiktok_video/ut2zoqvl9xfuwkzalw1l', 1, '2024-05-20 17:38:55', '2024-05-21 15:22:51'),
+(26, 0, 0, 0, 1, 'Lý do tại sao bạn nên sỡ hữu một chú mèo', 'https://drive.usercontent.google.com/download?id=1Nu8S88uR0Sa_yh3AgmvlurK-X1KhTL2x&export=view&authuser=1', 'http://res.cloudinary.com/da5wewzih/video/upload/v1716358440/tiktok_video/l8r2ue2zvcd8pr8tch6b.mp4', '1Nu8S88uR0Sa_yh3AgmvlurK-X1KhTL2x', 'tiktok_video/l8r2ue2zvcd8pr8tch6b', 0, '2024-05-22 06:13:40', '2024-05-22 06:13:51'),
+(27, 0, 0, 0, 1, 'Hướng dẫn cách đánh bọt cho meo meo', 'https://drive.usercontent.google.com/download?id=1uDOyEae47s3p3B3Pa3Y1fWMLdGnZz6AC&export=view&authuser=1', 'http://res.cloudinary.com/da5wewzih/video/upload/v1716359820/tiktok_video/ial9tepmkryolwr10kdp.mp4', '1uDOyEae47s3p3B3Pa3Y1fWMLdGnZz6AC', 'tiktok_video/ial9tepmkryolwr10kdp', -1, '2024-05-22 06:36:34', '2024-05-22 06:36:51');
 
 -- --------------------------------------------------------
 
@@ -327,15 +353,19 @@ CREATE TABLE `users` (
   `isVertified` tinyint(1) DEFAULT 0,
   `roleCode` varchar(255) DEFAULT 'R3',
   `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updatedAt` timestamp NOT NULL DEFAULT current_timestamp()
+  `updatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
+  `peerId` varchar(255) DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `fullName`, `userName`, `email`, `password`, `association`, `avatarPublicId`, `isVertified`, `roleCode`, `createdAt`, `updatedAt`) VALUES
-(1, 'Hoàng Huy', 'hoanghuydev', 'hoanghuydev@gmail.com', '$2b$10$E1mmN84Cvmr2urQYPcXcMO0GCmHfSZOCivONt1szhhasrhuhmD7zW', '', 'tiktok_avatar/qrabjbofeuu20wpg28o0', 1, 'R3', '2024-02-24 06:39:20', '2024-02-24 06:39:20');
+INSERT INTO `users` (`id`, `fullName`, `userName`, `email`, `password`, `association`, `avatarPublicId`, `isVertified`, `roleCode`, `createdAt`, `updatedAt`, `peerId`) VALUES
+(1, 'Hoàng Huy', 'hoanghuydev', 'hoanghuydev@gmail.com', '$2b$10$E1mmN84Cvmr2urQYPcXcMO0GCmHfSZOCivONt1szhhasrhuhmD7zW', '', 'tiktok_avatar/tfgnuwbhky8rbyg3pgzm', 1, 'R3', '2024-02-24 06:39:20', '2024-05-22 06:20:34', ''),
+(2, 'Trần Võ Hoàng Huy', 'google111635119529567317993', '21130386@st.hcmuaf.edu.vn', '$2b$10$pFcC1YtLAaY3jh4wbozFROIXFDZDWqdn1ysZJHP6b5gQNwBlS0J4O', 'google', 'tiktok_avatar/qrabjbofeuu20wpg28o0', 1, 'R3', '2024-05-19 06:11:50', '2024-05-19 06:11:50', ''),
+(3, 'HACK GAME MOBILE', 'google113126273317362616172', 'ngaogaming113@gmail.com', '$2b$10$Jhlime7lexSh9jU3FdGcaurcqipQxCNBBCVtepUGDXYTp5qYN.Qf.', 'google', 'tiktok_avatar/qrabjbofeuu20wpg28o0', 1, 'R3', '2024-05-19 06:58:06', '2024-05-19 06:58:06', ''),
+(4, 'github161137978', 'github161137978', 'github161137978@gmail.com', '$2b$10$2Kkp0bS2WG.QAGwuFtEiVevIYezv0.7UTUTSUycIXeF0no/jIp6va', 'github', 'tiktok_avatar/tvfmylnammlzck3w3abg', 1, 'R3', '2024-05-19 07:27:46', '2024-05-22 06:29:00', '');
 
 -- --------------------------------------------------------
 
@@ -350,6 +380,14 @@ CREATE TABLE `usersinchatroom` (
   `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
   `updatedAt` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `usersinchatroom`
+--
+
+INSERT INTO `usersinchatroom` (`id`, `member`, `chatroomId`, `createdAt`, `updatedAt`) VALUES
+(7, 1, 4, '2024-05-22 06:53:20', '2024-05-22 06:53:20'),
+(8, 4, 4, '2024-05-22 06:53:20', '2024-05-22 06:53:20');
 
 --
 -- Indexes for dumped tables
@@ -499,7 +537,7 @@ ALTER TABLE `usersinchatroom`
 -- AUTO_INCREMENT for table `avatars`
 --
 ALTER TABLE `avatars`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -517,7 +555,7 @@ ALTER TABLE `categoriesofpost`
 -- AUTO_INCREMENT for table `chatrooms`
 --
 ALTER TABLE `chatrooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `commentspost`
@@ -535,7 +573,7 @@ ALTER TABLE `commentsreply`
 -- AUTO_INCREMENT for table `followers`
 --
 ALTER TABLE `followers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `likescomment`
@@ -547,7 +585,7 @@ ALTER TABLE `likescomment`
 -- AUTO_INCREMENT for table `likespost`
 --
 ALTER TABLE `likespost`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `messages`
@@ -571,7 +609,7 @@ ALTER TABLE `otps`
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -583,19 +621,19 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `tmpposts`
 --
 ALTER TABLE `tmpposts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `usersinchatroom`
 --
 ALTER TABLE `usersinchatroom`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Constraints for dumped tables

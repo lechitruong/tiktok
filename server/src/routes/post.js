@@ -4,7 +4,7 @@ const router = express.Router();
 import PostController from '../controller/PostController';
 import Auth from '../middleware/auth';
 const multer = require('multer');
-const upload = multer();
+const upload = multer({ dest: 'uploads/' });
 router.get('/', Auth.setUser, PostController.getPosts);
 router.get('/:postId', PostController.getPostById);
 router.get('/user/:userId', PostController.getPosts);

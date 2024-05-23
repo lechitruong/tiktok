@@ -10,7 +10,6 @@ async function registerUserWithOAuth(email, profile) {
     const fullName = profile.displayName || userName;
     const password = process.env.DEFAULT_PASSWORD;
     const association = profile.provider;
-    console.log(profile);
     const resp = await authServices.register(
         email,
         fullName,

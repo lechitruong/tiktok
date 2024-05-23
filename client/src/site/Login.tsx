@@ -5,6 +5,8 @@ import { AppDispatch } from '@/redux/store'
 import { loginSuccess } from '@/features/auth/authSlice'
 import { authSelector } from '@/redux/selector'
 import { useNavigate } from 'react-router-dom'
+import showToast from '@/utils/toast'
+import { message } from 'antd'
 const Login = () => {
   const dispatch = useDispatch<AppDispatch>()
   const authState = useSelector(authSelector);
@@ -21,7 +23,10 @@ const Login = () => {
   }, []);
   useEffect(() => {
     if (authState.isSuccess) {
-        navigate('/');
+      message.success("Logged in")
+      setTimeout(()=> {
+       navigate('/');
+      },500)
     }
   }, [authState.isSuccess, navigate]);
   return (

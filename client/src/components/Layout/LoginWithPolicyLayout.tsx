@@ -1,10 +1,10 @@
-import { LayoutProps } from 'antd'
+import { LayoutProps } from './DefaultLayout'
 import React from 'react'
 import LoginLayout from './LoginLayout'
 
-const LoginWithPolicyLayout = ({children} :LayoutProps) => {
+const LoginWithPolicyLayout = ({children,fullScreen} :LayoutProps) => {
   return (
-    <LoginLayout>
+    <LoginLayout fullScreen={fullScreen}>
         {children}
         <div className='w-full flex flex-col items-center'>
         <p className='text-center w-[337px] mb-5 lg:mb-12 text-gray-500 text-[12px]'>

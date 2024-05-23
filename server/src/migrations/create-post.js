@@ -19,6 +19,11 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 defaultValue: 0,
             },
+            visibility: {
+                allowNull: false,
+                type: Sequelize.INTEGER,
+                defaultValue: 1,
+            },
             shares: {
                 allowNull: false,
                 type: Sequelize.INTEGER,

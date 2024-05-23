@@ -1,10 +1,12 @@
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import React, { useEffect } from 'react'
 import TiktokLogo from '@/assets/tiktok-logo.svg'
-const LoginLayout = ({children}: {children : React.ReactNode}) => {
+import { LayoutProps } from './DefaultLayout'
+import clsx from 'clsx'
+const LoginLayout = ({children,fullScreen}: LayoutProps) => {
     
   return (
-    <div className='bg-white flex justify-center items-center w-full flex-col h-dvh'>
+    <div className={clsx('bg-white flex justify-center items-center w-full flex-col',fullScreen ? 'h-dvh overflow-hidden' : 'h-full')}>
       <header className='flex justify-between px-6 mt-3 w-full'>
         <a href="/" className=''>
           <img src={TiktokLogo} alt=""/>

@@ -17,9 +17,28 @@ export const getPosts = (
                 orderDirection
             );
             const query = {};
-            if (postId || title) query.where = {};
+            query.where = {
+                [Op.or]: [
+                    { visibility: 1 },
+                    {
+                        visibility: 0,
+                        poster: {
+                            [Op.in]: literal(`(
+                                SELECT f1.followee
+                                FROM followers f1
+                                JOIN followers f2 ON f1.followee = f2.follower
+                                WHERE f1.follower = ${req.user.id}
+                                AND f2.followee = ${req.user.id}
+                            )`),
+                        },
+                    },
+                    { visibility: -1, poster: req.user.id }, // User's own posts
+                ],
+            };
+
             if (postId) query.where.id = postId;
             if (title) query.where.title = { [Op.substring]: title };
+
             query.include = [];
             if (userId)
                 query.include.push({
@@ -50,6 +69,7 @@ export const getPosts = (
                     ],
                 ],
             };
+
             if (req.user) {
                 query.attributes.include.push([
                     literal(`(
@@ -97,7 +117,7 @@ export const getPosts = (
                         SELECT EXISTS (
                             SELECT 1
                             FROM likesPost lp,posts p
-                            WHERE lp.liker = ${req.user.id} AND p.poster = lp.liker AND p.id = lp.postId AND post.id = p.id
+                            WHERE lp.liker = ${req.user.id} AND p.id = lp.postId AND post.id = p.id
                         )
                         )`),
                     'isLiked',
@@ -222,19 +242,13 @@ export const sharePost = (id) =>
             reject(error);
         }
     });
-export const isFriend = (userId1, userId2) =>
+export const deletePost = (id) =>
     new Promise(async (resolve, reject) => {
         try {
-            const isFollow = await followerServices.getFollower({
-                follower: userId1,
-                followee: userId2,
+            const resp = await db.Post.destroy({
+                where: { id },
             });
-            const isFollow2 = await followerServices.getFollower({
-                follower: userId2,
-                followee: userId1,
-            });
-            if (isFollow && isFollow2) resolve(true);
-            else resolve(false);
+            resolve(resp);
         } catch (error) {
             reject(error);
         }

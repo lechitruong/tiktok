@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
             thumnailUrl: DataTypes.STRING,
             thumnailId: DataTypes.STRING,
             comments: DataTypes.INTEGER,
+            visibility: DataTypes.INTEGER,
             views: DataTypes.INTEGER,
             shares: DataTypes.INTEGER,
             poster: DataTypes.INTEGER,

@@ -10,6 +10,7 @@ const {
 } = require('../utils/handleResp');
 import { log } from 'console';
 import * as userInChatroomServices from '../services/userInChatroom';
+import * as followerServices from '../services/follower';
 class Auth {
     authGoogle(req, res, next) {
         passport.authenticate('google', (err, profile) => {

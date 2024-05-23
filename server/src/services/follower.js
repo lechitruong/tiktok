@@ -176,3 +176,20 @@ export const unfollowUser = (follower, followee) =>
             reject(error);
         }
     });
+export const isFriend = (userId1, userId2) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const isFollow = await followerServices.getFollower({
+                follower: userId1,
+                followee: userId2,
+            });
+            const isFollow2 = await followerServices.getFollower({
+                follower: userId2,
+                followee: userId1,
+            });
+            if (isFollow && isFollow2) resolve(true);
+            else resolve(false);
+        } catch (error) {
+            reject(error);
+        }
+    });

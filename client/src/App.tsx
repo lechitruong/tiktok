@@ -7,7 +7,7 @@ import {
   Routes,
   Route
 } from 'react-router-dom'
-import { RouteType, publicRoutes } from './routes';
+import { RouteType, privateRoutes, publicRoutes } from './routes';
 import DefaultLayout from './components/Layout/DefaultLayout';
 import Page404 from './site/Page404';
 import { useDispatch, useSelector } from 'react-redux';
@@ -42,7 +42,7 @@ function App() {
         key={index}
         path={route.path}
         element={
-          <Layout>
+          <Layout fullScreen={route.fullScreen}>
             <Page />
           </Layout>
         }
@@ -50,11 +50,16 @@ function App() {
     );
   };
   return (
-      <div className='h-dvh overflow-hidden'>
+      <div className=''>
         <Router>
           <Routes>
             { 
               publicRoutes.map((route:RouteType,index:number) => 
+                RouteRender(route,index)
+              )
+            }
+            {user &&
+              privateRoutes.map((route:RouteType,index:number) => 
                 RouteRender(route,index)
               )
             }

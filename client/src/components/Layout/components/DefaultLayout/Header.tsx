@@ -4,7 +4,7 @@ import { IoIosSearch } from "react-icons/io";
 import TiktokLogo from '@/assets/tiktok-logo.svg'
 import { TbPointFilled } from "react-icons/tb";
 import Button from '@/components/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { currentUserSelector } from '@/redux/selector';
 import { FiSend } from "react-icons/fi";
@@ -12,10 +12,13 @@ import { RiMessageLine } from "react-icons/ri";
 import clsx from 'clsx';
 const Header = () => {
     const user = useSelector(currentUserSelector)
+    const navigate = useNavigate()
   return (
     <header className='h-[60px] bg-white justify-between shadow-sm flex items-center ps-4 pe-6 border-b-[1px] border-b-gray-200'>
         <div className="logo w-[280px]">
-          <img src={TiktokLogo} width="110px" alt="Tiktok logo" />
+          <Link to='/'>
+            <img src={TiktokLogo} width="110px" alt="Tiktok logo" />
+          </Link>
         </div>
         <div className='flex-1 me-2 hidden md:flex max-w-[500px] '>
           <div className='w-full border-[1px] border-gray-300 px-4 py-[9px] bg-gray-100 rounded-full flex relative '>
@@ -41,7 +44,7 @@ const Header = () => {
         user && 'gap-8',
         !user && 'gap-4'
         )}>
-          <Button icon={<FaPlus className='my-auto'/>} secondary={true} className=' rounded-[2px] px-1 py-1 max-w-[115px]'>Upload</Button>
+          <Button onClick={()=>{user ? navigate('/upload') : navigate('/login')}} icon={<FaPlus className='my-auto'/>} secondary={true} className=' rounded-[2px] px-1 py-1 max-w-[115px]'>Upload</Button>
           {!user &&
             <Button href='/login' className=' rounded-[2px] px-1 py-1 w-[100px]'>Login</Button>
           }

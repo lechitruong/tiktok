@@ -2,6 +2,7 @@ import path from 'path';
 const { google } = require('googleapis');
 const { Stream } = require('stream');
 const cloudinary = require('cloudinary').v2;
+const fs = require('fs');
 class UploadFile {
     KEYFILEPATH = path.join(__dirname, '../config/credentials.json');
     SCOPES = ['https://www.googleapis.com/auth/drive'];
@@ -17,7 +18,17 @@ class UploadFile {
             secure: true,
         });
     };
-
+    async getBufferFileWithPath(pathFile) {
+        return new Promise((resolve, reject) => {
+            fs.readFile(pathFile, (err, fileBuffer) => {
+                if (err) {
+                    console.error('Error reading the video file:', err);
+                    reject(err);
+                }
+                resolve(fileBuffer);
+            });
+        });
+    }
     async uploadToGGDriver(file, fileName, folderId) {
         const bufferStream = new Stream.PassThrough();
         bufferStream.end(file.buffer);

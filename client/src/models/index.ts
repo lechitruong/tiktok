@@ -1,7 +1,7 @@
 export interface AbstractModel {
     id : number | null | undefined
-    createAt : Date | null
-    updateAt : Date | null
+    createdAt : Date | null
+    updatedAt : Date | null
 }
 export interface PaginationModel {
     orderBy : string

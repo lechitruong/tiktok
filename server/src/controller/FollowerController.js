@@ -39,7 +39,7 @@ class FollowController {
                 userId
             );
             if (!follow[1])
-                badRequest("You're already following this user", res);
+                return badRequest("You're already following this user", res);
             const isFriend = await followerServices.getFollower({
                 follower: userId,
                 followee: req.user.id,
@@ -70,7 +70,8 @@ class FollowController {
     async unfollowUser(req, res) {
         try {
             const { userId } = req.params;
-            if (userId == req.user.id) return internalServerError(res);
+            if (userId == req.user.id)
+                return badRequest('Cant unfollow yourself', res);
             const isFollow = await followerServices.getFollower({
                 follower: req.user.id,
                 followee: userId,
@@ -92,7 +93,7 @@ class FollowController {
                     req.user.id,
                     chatroomId
                 );
-                await useFromChatroomServices.removeUserFromChatroom(
+                await userInChatroomServices.removeUserFromChatroom(
                     userId,
                     chatroomId
                 );

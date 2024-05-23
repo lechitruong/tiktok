@@ -12,7 +12,7 @@ export const axiosNoToken = axios.create({
 export const axiosToken = axios.create({
     baseURL,
     headers: {
-        token: (localStorage.getItem("accessToken") || ''),
+        token: localStorage.getItem("accessToken"),
     },
     withCredentials: true
 })
@@ -30,7 +30,8 @@ axiosToken.interceptors.request.use(
                 console.error(error)
                }
             }
-        }
+            config.headers['token'] = accessToken
+        } 
         return config;
     }
 )

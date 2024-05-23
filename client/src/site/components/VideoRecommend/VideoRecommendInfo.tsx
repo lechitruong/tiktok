@@ -3,11 +3,15 @@ import { PostModel } from '@/models/post';
 import clsx from 'clsx';
 import React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { VideoRecommendChildProps } from '.';
+import { useSelector } from 'react-redux';
+import { currentUserSelector } from '@/redux/selector';
 
 const VideoRecommendInfo = ({post,isFollow,setIsFollow,followUser} : VideoRecommendChildProps) => {
     const titleRef = useRef<HTMLParagraphElement>(null);
+    const user = useSelector(currentUserSelector)
+    const navigate = useNavigate();
     const [showMore, setShowMore] = useState(false);
     const [isTitleOverflowing, setIsTitleOverflowing] = useState(false);
     useEffect(() => {
@@ -45,7 +49,7 @@ const VideoRecommendInfo = ({post,isFollow,setIsFollow,followUser} : VideoRecomm
             )}
           </div>
          {!post.isMe ? 
-            <Button outline setWidth onClick={followUser} className='h-fit min-w-[90px] max-w-[90px] px-1 py-2 mt-4 sm:mt-0'>
+            <Button outline setWidth onClick={()=> {user ? followUser() : navigate('/login')}} className='h-fit min-w-[90px] max-w-[90px] px-1 py-2 mt-4 sm:mt-0'>
               {isFollow ? "Following" : "Follow" }
             </Button> : ""
           }

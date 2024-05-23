@@ -4,19 +4,20 @@ import LoginWithPolicyLayout from "@/components/Layout/LoginWithPolicyLayout";
 import Home from "@/site/Home";
 import Login from "@/site/Login";
 import LoginEmail from "@/site/LoginEmail";
+import Upload from "@/site/Upload";
 export interface RouteType {
     path: string;
     element: React.ComponentType; 
-    layout : React.ComponentType<{children : React.ReactNode}>;
+    layout?: React.ComponentType<{children : React.ReactNode}>;
+    fullScreen? : boolean;
 }
 
-export const publicRoutes = [
-    { path: "/", element: Home, layout : DefaultLayout },
-    { path: "/login", element: Login, layout : LoginWithPolicyLayout },
-    { path: "/login-email", element: LoginEmail, layout : LoginLayout },
+export const publicRoutes : RouteType[] = [
+    { path: "/", element: Home, layout : DefaultLayout , fullScreen :true },
+    { path: "/login", element: Login, layout : LoginWithPolicyLayout , fullScreen :true },
+    { path: "/login-email", element: LoginEmail, layout : LoginLayout , fullScreen :true },
 ];
   
-//   const privateRoutes = [
-//     { path: "/mission", component: Mission },
-//     { path: "/redeemed-gifts", component: RedeemedGifts },
-//   ];
+export const privateRoutes : RouteType[] = [
+   { path: "/upload", element: Upload,layout : DefaultLayout, fullScreen :false },
+];

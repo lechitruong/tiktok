@@ -4,6 +4,7 @@ import { UserModel } from "@/models/user";
 import { Bounce, toast } from "react-toastify";
 import showToast from "@/utils/toast";
 import { useNavigate } from "react-router-dom";
+import { message } from "antd";
 export const register = createAsyncThunk(
     'auth/register',
     async ( user : RegisterParams,thunkAPI) => {
@@ -99,36 +100,36 @@ const authSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(login.fulfilled, (state :InitStateAuthType,action) => {
-                state.isLoading = false;
                 state.isError = false;
-                state.isSuccess = true;
                 const payload = action.payload as AuthPayload
                 localStorage.setItem("accessToken", payload.accessToken)
                 state.user = payload.user
+                state.isLoading = false;
+                state.isSuccess = true;
+
             })
             .addCase(login.rejected,(state:InitStateAuthType,action)=> {
                 state.isLoading = false;
                 state.isError = true;
                 state.isSuccess = false;
                 const payload = action.payload as AuthPayload;
-                
                 if (payload) {
                     state.message =  payload.mes;
                     state.user = null;
-                    showToast.error(payload.mes)
-                } else showToast.error("Unknown error occurred")
+                    message.error(payload.mes)
+                } else message.error("Unknown error occurred")
                 
             })
             .addCase(loginSuccess.pending,(state:InitStateAuthType)=> {
                 state.isLoading = true;
             })
             .addCase(loginSuccess.fulfilled, (state :InitStateAuthType,action) => {
-                state.isLoading = false;
                 state.isError = false;
-                state.isSuccess = true;
                 const payload = action.payload as AuthPayload
                 localStorage.setItem("accessToken", payload.accessToken)
                 state.user = payload.user
+                state.isLoading = false;
+                state.isSuccess = true;
             })
             .addCase(loginSuccess.rejected,(state:InitStateAuthType,action)=> {
                 state.isLoading = false;
@@ -138,8 +139,8 @@ const authSlice = createSlice({
                 if (payload) {
                     state.message =  payload.mes;
                     state.user = null;
-                    showToast.error(payload.mes)
-                } else showToast.error("Unknown error occurred")
+                    message.error(payload.mes)
+                } else message.error("Unknown error occurred")
                 
             })
             .addCase(verifyAccount.pending,(state:InitStateAuthType)=> {
