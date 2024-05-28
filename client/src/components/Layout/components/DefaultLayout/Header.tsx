@@ -16,9 +16,9 @@ const Header = () => {
   return (
     <header className='h-[60px] bg-white justify-between shadow-sm flex items-center ps-4 pe-6 border-b-[1px] border-b-gray-200'>
         <div className="logo w-[280px]">
-          <Link to='/'>
+          <a href='/'>
             <img src={TiktokLogo} width="110px" alt="Tiktok logo" />
-          </Link>
+          </a>
         </div>
         <div className='flex-1 me-2 hidden md:flex max-w-[500px] '>
           <div className='w-full border-[1px] border-gray-300 px-4 py-[9px] bg-gray-100 rounded-full flex relative '>

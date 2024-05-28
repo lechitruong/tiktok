@@ -3,6 +3,7 @@ import db, { Sequelize } from '../models';
 import { pagingConfig } from '../utils/pagination';
 import { formatQueryUser } from './user';
 import post from '../models/post';
+import { VISIBILITY_POST_FRIEND, VISIBILITY_POST_PUBLIC } from '../../constant';
 export const getPosts = (
     postId,
     { page, pageSize, orderBy, orderDirection, userId, title },
@@ -17,23 +18,28 @@ export const getPosts = (
                 orderDirection
             );
             const query = {};
-            query.where = {
-                [Op.or]: [
-                    { visibility: 1 },
+            const getPostWithVisibility = [
+                { visibility: VISIBILITY_POST_PUBLIC },
+            ];
+            if (req.user?.id) {
+                getPostWithVisibility.push(
                     {
-                        visibility: 0,
+                        visibility: VISIBILITY_POST_FRIEND,
                         poster: {
                             [Op.in]: literal(`(
-                                SELECT f1.followee
-                                FROM followers f1
-                                JOIN followers f2 ON f1.followee = f2.follower
-                                WHERE f1.follower = ${req.user.id}
-                                AND f2.followee = ${req.user.id}
-                            )`),
+                            SELECT f1.followee
+                            FROM followers f1
+                            JOIN followers f2 ON f1.followee = f2.follower
+                            WHERE f1.follower = ${req.user.id}
+                            AND f2.followee = ${req.user.id}
+                        )`),
                         },
                     },
-                    { visibility: -1, poster: req.user.id }, // User's own posts
-                ],
+                    { visibility: VISIBILITY_POST_PUBLIC, poster: req.user.id }
+                );
+            }
+            query.where = {
+                [Op.or]: getPostWithVisibility,
             };
 
             if (postId) query.where.id = postId;

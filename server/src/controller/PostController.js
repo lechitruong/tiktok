@@ -126,7 +126,9 @@ class PostController {
         try {
             const { files } = req;
             const poster = req.user.id;
-            const { title, visibility } = req.body;
+            const { title } = req.body;
+            const visibility = parseInt(req.body.visibility);
+
             if (
                 !title ||
                 visibility == undefined ||
