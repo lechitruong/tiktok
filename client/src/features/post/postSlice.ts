@@ -5,17 +5,7 @@ import { PaginationModel } from '@/models';
 import { message } from 'antd';
 import { PostUploadModel } from '@/models/postUpload';
 import AbstractPayload from '@/utils/abtractPayloadType';
-export const getPosts = createAsyncThunk(
-  'post/getPosts',
-  async (postId, thunkAPI) => {
-    try {
-      const resp = await PostService.getPosts();
-      return resp;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response.data);
-    }
-  }
-);
+
 export const uploadPost = createAsyncThunk(
   'post/uploadPost',
   async (postFormData: FormData, thunkAPI) => {
@@ -82,27 +72,6 @@ const postSlice = createSlice({
   },
   extraReducers: (builder) =>
     builder
-      .addCase(getPosts.pending, (state: InitStatePostType) => {
-        state.isLoading = true;
-      })
-      .addCase(getPosts.fulfilled, (state: InitStatePostType, action) => {
-        state.isError = false;
-        const payload = action.payload as PostsPayload;
-        state.posts = payload.posts;
-        state.isLoading = false;
-        state.isSuccess = true;
-      })
-      .addCase(getPosts.rejected, (state: InitStatePostType, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.isSuccess = false;
-        const payload = action.payload as PostsPayload;
-        if (payload) {
-          state.message = payload.mes;
-          state.posts = [];
-          message.error(payload.mes);
-        } else message.error('Unknown error occurred');
-      })
       .addCase(uploadPost.pending, (state: InitStatePostType) => {
         state.isLoading = true;
       })
