@@ -6,6 +6,7 @@ import GoogleIcon from '@/assets/google-icon.svg';
 import Button from '@/components/Button';
 import { baseURL } from '@/axios';
 import { useNavigate } from 'react-router-dom';
+// 4. Display Login Required Message
 const LoginOptions = () => {
   const navigate = useNavigate();
   return (
