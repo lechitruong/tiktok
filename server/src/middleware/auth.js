@@ -61,12 +61,12 @@ class Auth {
             );
         }
     }
-    // 
+    
     origin(req, res, next) {
         const token = req.headers.token;
-
+        // Alt Token Invalid
+        // 4. Return Error Message
         if (!token) {
-            // 4. Return Error Message
             return unauthorized(`You're not authenticated`, res);
         }
         const accessToken = token.split(' ')[1];
@@ -78,8 +78,8 @@ class Auth {
                 if (err) {
                     return forBidden('Token is not valid', res);
                 }
-                // 4. Call next()
                 req.user = user;
+                // 4. Call next()
                 next();
             }
         );
