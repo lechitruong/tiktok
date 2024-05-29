@@ -7,6 +7,7 @@ import { authSelector } from '@/redux/selector'
 import { useNavigate } from 'react-router-dom'
 import showToast from '@/utils/toast'
 import { message } from 'antd'
+// 4. Display Login Required Message
 const Login = () => {
   const dispatch = useDispatch<AppDispatch>()
   const authState = useSelector(authSelector);
