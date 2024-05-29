@@ -1,3 +1,10 @@
+const port = 8000;
+const dotenv = require('dotenv');
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+const { getConnection } = require('./config/db');
+import route from './routes';
+import startCron from './cron';
 startCron();
 dotenv.config();
 require('./config/oauth/passport');
