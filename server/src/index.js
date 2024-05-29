@@ -1,3 +1,10 @@
+startCron();
+dotenv.config();
+require('./config/oauth/passport');
+import client from './config/db/redis';
+global._basedir = __dirname;
+const { Server } = require('socket.io');
+const handleSocket = require('./socket');
 getConnection();
 app.use(
     cors({
