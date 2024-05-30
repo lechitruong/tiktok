@@ -34,6 +34,7 @@ const UploadForm = () => {
   const pecentUploading = useSelector(pecentLoadingPostSelector);
   const video = postUpload?.video;
   const title = postUpload?.title || '';
+  // 5-7 Nhập thông tin đăng tải
   const showModal = () => {
     setShowModalUploading(true);
   };
@@ -60,6 +61,7 @@ const UploadForm = () => {
       })
     );
   };
+  // 9. Gửi yêu cầu đăng tải video
   const handleUploadPost = () => {
     if (postUpload?.title) {
       const videoFile = postUpload.video?.originFileObj;
@@ -117,6 +119,7 @@ const UploadForm = () => {
             />
           </div>
           <div className="my-8">
+            {/* Nhấn nút đăng tải video */}
             <Button
               onClick={handleUploadPost}
               type="button"

@@ -112,6 +112,8 @@ const postSlice = createSlice({
         state.post = payload.post;
         state.isLoading = false;
         state.isSuccess = true;
+        // 14 Thông báo kết quả
+        message.success(payload.mes);
       })
       .addCase(uploadPost.rejected, (state: InitStatePostType, action) => {
         state.isLoading = false;
@@ -121,6 +123,7 @@ const postSlice = createSlice({
         if (payload) {
           state.message = payload.mes;
           state.post = null;
+          // 14 Thông báo kết quả
           message.error(payload.mes);
         } else message.error('Unknown error occurred');
       }),

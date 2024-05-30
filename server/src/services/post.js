@@ -183,7 +183,8 @@ export const getOne = (id) =>
             reject(error);
         }
     });
-export const insertPost = ({
+// 11.2 create()
+export const upload = ({
     poster,
     title,
     thumnailUrl,
@@ -201,6 +202,7 @@ export const insertPost = ({
                 videoUrl,
                 videoId,
             });
+            // 11.3 Trả về post id
             resolve(resp);
         } catch (error) {
             reject(error);
@@ -219,7 +221,7 @@ export const removePost = (id) =>
             reject(error);
         }
     });
-export const updatePost = (id, postModel) =>
+export const update = (id, postModel) =>
     new Promise(async (resolve, reject) => {
         try {
             const resp = await db.Post.update(postModel, {

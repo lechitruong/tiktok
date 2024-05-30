@@ -145,19 +145,16 @@ class PostController {
                     res
                 );
             }
+            // 10. Kiểm tra định dạng và kích thước
             for (const file of files) {
                 if (file.size / (1024 * 1024) > 80)
+                    // 11. Gửi thông báo lỗi
                     return badRequest(
                         'Cannot upload file with size more than 80mb',
                         res
                     );
             }
-            const post = await postServices.insertPost({
-                poster,
-                title,
-                visibility,
-            });
-            postId = post.id;
+
             video = files.filter((file) => file.fieldname == 'video')[0];
             if (!video) {
                 return badRequest('Please provide a video', res);
@@ -165,7 +162,14 @@ class PostController {
             if (!video.mimetype.includes('video'))
                 return badRequest('Field video must be video type', res);
             thumnail = files.filter((file) => file.fieldname == 'thumnail')[0];
-
+            // 11.1 Upload video
+            const post = await postServices.upload({
+                poster,
+                title,
+                visibility,
+            });
+            postId = post.id;
+            // 12.1 Đăng tỉa video / thumbnail
             if (thumnail) {
                 if (!thumnail.mimetype.includes('image'))
                     return badRequest('Field thumnail must be image type', res);
@@ -198,6 +202,7 @@ class PostController {
             const videoBuffer = await UploadFile.getBufferFileWithPath(
                 video.path
             );
+            // 12.2 Trả về đường dẫn
             videoUploadMain = await UploadFile.uploadToCloudinary(
                 videoBuffer,
                 process.env.VIDEO_TYPE_FILE,
@@ -209,13 +214,15 @@ class PostController {
                     video = null;
                 }
             });
-            await postServices.updatePost(post.id, {
+            // 13.1 update
+            await postServices.update(post.id, {
                 videoId: videoUploadMain.id,
                 videoUrl: videoUploadMain.url,
                 thumnailId: thumnailUpload.id,
                 thumnailUrl: thumnailUpload.url,
             });
             const postUpdated = await postServices.getOne(post.id);
+            // Trả về kết quả
             return res.json(postUpdated);
         } catch (error) {
             console.log(error);
